@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{exam}
 
 \usepackage[margin=1.0in]{geometry}
 \usepackage[utf8]{inputenc}
@@ -15,30 +15,38 @@
     backend=biber,
     style=ieee
 ]{biblatex}
+\usepackage[pdfusetitle]{hyperref}
 \usepackage{graphicx}
 \graphicspath{ {./img/} }
 \usepackage{siunitx}
-\usepackage{hyperref}
 \hypersetup{pdftex,colorlinks=true,allcolors=black}
 
+\pagestyle{headandfoot}
+\firstpageheader{Kotlin for Android Development}{}{}
+\runningheader{}{}{}
+\firstpagefooter{}{}{}
+\runningheadrule
+
 \begin{document}
-\title{Kotlin for Android Development Assignment}
-\author{Daniel Meszaros}
+\title{Kotlin for Android Development Assignment Specification}
+\author{Daniel Meszaros (JHZF2T)}
 \date{2020/21/1}
 %\maketitle
 
 \emph{Surveyor} is a GPS track recorder application that makes it
 possible to save and share hiking routes.
 
-Users can review these recordings, overlaying them on an interactive map,
-and even export them into standard GPX files for interchange with other devices
-and software.
-Saved recordings can be given a custom title, so that the users may find them
-more quickly when searching.
+Users can \textbf{review these recordings}, overlaying them on an interactive
+map, and even \textbf{export them} as \textbf{standard GPX files} for
+interchange with other devices and software.
+\textbf{Saved recordings can be given a custom title}, so that the users may
+find them more quickly when searching.
 
-The built-in map can be used for navigation while the user is currently
-recording a route, with the recorded data being overlayed onto the map.
-A compass arrow is drawn at user's location indicating the direction they face.
+The \textbf{built-in map} can be used for navigation even while the user is currently
+recording a route, with the recorded data being overlayed onto the map and
+updated in real-time.
+A \textbf{compass arrow} is drawn at user's location indicating the direction
+they face.
 
 Since there is no way to charge the phone on the trail (aside from external
 battery packs) the application should be power efficient and not waste energy.
@@ -46,20 +54,22 @@ Alternative trackers like \emph{OSMtracker} and \emph{ViewRanger} stop recording
 any location data when the screen is locked.
 This means that the user needs to keep the screen on, which quickly drains the
 battery.
-An important feature of this application that it works even when it's in the
-background.
+An important feature of this application that \textbf{it works even when it's
+in the background}.
 
-Users can mark points-of-interest with the press of a button. These
-markers/waypoints are stored in the recording.
+Users can \textbf{mark points-of-interest} with the press of a button. These
+markers/waypoints are stored in the recording as well.
 
-The application can generate speed and elevation graphs, as well as statistical
-information like average speed, top speed, etc. when reviewing a past recording.
+The application can generate \textbf{speed and elevation graphs}, as well as
+\textbf{statistical information} like average speed, top speed, etc. when
+reviewing a past recording.
 
-The user are not required to login or be online to record routes, but loading
-maps still need an internet connection.
+The user are not required to login or be online to record routes, but
+downloading maps still need an internet connection.
 
 I intend to use the OpenStreetMaps Android
 library\footnote{https://github.com/osmdroid/osmdroid} as it's much more
-detailed when it comes navigation on hiking trails.
+detailed when it comes navigation on hiking trails and it supports drawing lines
+on the map.
 
 \end{document}
