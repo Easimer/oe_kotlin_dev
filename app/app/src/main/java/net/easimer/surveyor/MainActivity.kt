@@ -27,6 +27,10 @@ class MainActivity : AppCompatActivity() {
         val recyclerViewElem = findViewById<RecyclerView>(R.id.main_list)
         recyclerView = RecordingRecyclerView.createRecyclerView(this, recyclerViewElem)
 
+        recyclerViewElem.apply {
+            addItemDecoration(VerticalSpaceItemDecoration(8))
+        }
+
         val testData = listOf(
             Recording("Recording #1", "Budapest", Date(2020, 1, 1, 12, 30, 0)),
             Recording("Recording #2", "Budapest", Date(2020, 4, 4, 15, 30, 25))
