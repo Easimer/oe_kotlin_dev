@@ -13,6 +13,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView : RecordingRecyclerView
+    private val listOfRecordings = LinkedList<Recording>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,23 +21,24 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         findViewById<FloatingActionButton>(R.id.start_recording).setOnClickListener { view ->
-            Snackbar.make(view, "NYI", Snackbar.LENGTH_LONG)
-                    .show()
+            val idx = listOfRecordings.size
+            val r = Recording(
+                UUID.randomUUID(),
+                "Recording #$idx", "Budapest",
+                Date()
+            )
+            listOfRecordings.add(r)
+            recyclerView.viewAdapter.notifyItemInserted(listOfRecordings.size - 1)
         }
 
         val recyclerViewElem = findViewById<RecyclerView>(R.id.main_list)
         recyclerView = RecordingRecyclerView.createRecyclerView(this, recyclerViewElem)
 
         recyclerViewElem.apply {
-            addItemDecoration(VerticalSpaceItemDecoration(8))
+            addItemDecoration(VerticalSpaceItemDecoration(16))
         }
 
-        val testData = listOf(
-            Recording("Recording #1", "Budapest", Date(2020, 1, 1, 12, 30, 0)),
-            Recording("Recording #2", "Budapest", Date(2020, 4, 4, 15, 30, 25))
-        )
-
-        recyclerView.viewAdapter.submitList(testData)
+        recyclerView.viewAdapter.submitList(listOfRecordings)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
