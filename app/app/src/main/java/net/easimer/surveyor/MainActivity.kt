@@ -29,6 +29,10 @@ class MainActivity : PermissionCheckedActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        intent?.extras?.getString(EXTRA_REQUEST)?.also {
+            handleExtraRequest(it)
+        }
+
         findViewById<FloatingActionButton>(R.id.start_recording).setOnClickListener { view ->
             onNewRecordingButtonPressed()
             val idx = listOfRecordings.size
@@ -55,17 +59,22 @@ class MainActivity : PermissionCheckedActivity() {
         super.onNewIntent(intent)
 
         intent?.extras?.getString(EXTRA_REQUEST)?.also {
-            when(it) {
-                REQUEST_STOP_RECORDING -> {
-                    Log.d(TAG, "Received request REQUEST_STOP_RECORDING")
-                    Recorder.tryStopService(this)
-                }
-                else -> {
-                    Log.d(TAG, "Received UNIMPLEMENTED request $it")
-                }
+            handleExtraRequest(it)
+        }
+    }
+
+    private fun handleExtraRequest(request: String) {
+        when(request) {
+            REQUEST_STOP_RECORDING -> {
+                Log.d(TAG, "Received request REQUEST_STOP_RECORDING")
+                Recorder.tryStopService(this)
+            }
+            else -> {
+                Log.d(TAG, "Received UNIMPLEMENTED request $request")
             }
         }
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
