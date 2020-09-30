@@ -1,5 +1,6 @@
 package net.easimer.surveyor
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         findViewById<FloatingActionButton>(R.id.start_recording).setOnClickListener { view ->
+            onNewRecordingButtonPressed()
             val idx = listOfRecordings.size
             val r = Recording(
                 UUID.randomUUID(),
@@ -52,5 +54,12 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun onNewRecordingButtonPressed() {
+        val intent = Intent(this, MapActivity::class.java).apply {
+            putExtra(MapActivity.KIND, MapActivity.KIND_DYNAMIC)
+        }
+        startActivity(intent)
     }
 }
