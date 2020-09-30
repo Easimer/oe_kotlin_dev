@@ -56,6 +56,7 @@ class MapActivity : AppCompatActivity() {
 
         mapContainer.addView(mapView)
         mapView.zoomController.setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT)
+        mapView.setMultiTouchControls(true)
 
         val copyrightNotice: String =
             mapView.tileProvider.tileSource.copyrightNotice
