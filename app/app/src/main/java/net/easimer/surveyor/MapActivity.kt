@@ -20,7 +20,7 @@ import org.osmdroid.views.overlay.TilesOverlay
 import java.util.*
 
 
-class MapActivity : AppCompatActivity() {
+class MapActivity : PermissionCheckedActivity() {
     companion object {
         val KIND = "Kind"
         val KIND_STATIC = 0
@@ -66,32 +66,13 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun checkRwPermissions(onGranted: () -> Unit, onDenied: () -> Unit) {
-        if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            onGranted()
-        } else {
-            pendingRequests.put(nextRequestCode, Pair(onGranted, onDenied))
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), nextRequestCode)
-            nextRequestCode++
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        val req = pendingRequests.tryPop(requestCode)
-        if(req != null) {
-            if(grantResults.all { r -> r == PackageManager.PERMISSION_GRANTED }) {
-                req.first()
+        val perms = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        requestPermissions(perms) {
+            if(perms.all { x -> x in it}) {
+                onGranted()
             } else {
-                req.second()
+                onDenied()
             }
-        } else {
-            Log.d(
-                TAG,
-                "Received perm request code $requestCode with no matching entry in pendingRequests!"
-            )
         }
     }
 
