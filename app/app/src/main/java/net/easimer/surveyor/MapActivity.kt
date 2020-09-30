@@ -3,8 +3,11 @@ package net.easimer.surveyor
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.icu.text.AlphabeticIndex
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import org.osmdroid.config.Configuration
@@ -22,12 +25,14 @@ class MapActivity : AppCompatActivity() {
         val KIND = "Kind"
         val KIND_STATIC = 0
         val KIND_DYNAMIC = 1
+
+        private val MAP_STATE = "MAP_STATE"
     }
 
     private var nextRequestCode = 0
     private var pendingRequests = HashMap<Int, Pair<() -> Unit, () -> Unit>>()
     private val TAG = "MapActivity"
-    private lateinit var mapView: MapView
+    private lateinit var mapView: RecordingView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,29 +51,8 @@ class MapActivity : AppCompatActivity() {
     }
 
     private fun makeMapView(mapContainer: LinearLayout) {
-        mapView = MapView(this)
-        mapView.isTilesScaledToDpi = true
-
-        val cfg = Configuration.getInstance()
-
-        cfg.userAgentValue = "net.easimer.surveyor/0.0 Android osmdroid"
-        cfg.cacheMapTileCount = 32
-
+        mapView = RecordingView(this)
         mapContainer.addView(mapView)
-        mapView.zoomController.setVisibility(CustomZoomButtonsController.Visibility.SHOW_AND_FADEOUT)
-        mapView.setMultiTouchControls(true)
-
-        val copyrightNotice: String =
-            mapView.tileProvider.tileSource.copyrightNotice
-        val copyrightOverlay = CopyrightOverlay(this)
-        copyrightOverlay.setCopyrightNotice(copyrightNotice)
-        mapView.overlays.add(copyrightOverlay)
-
-        val provider = MapTileProviderBasic(applicationContext)
-        provider.tileSource = TileSourceFactory.MAPNIK
-        val tilesOverlay = TilesOverlay(provider, baseContext)
-        tilesOverlay.loadingBackgroundColor = Color.TRANSPARENT
-        mapView.overlays.add(tilesOverlay)
     }
 
     private fun checkRwPermissions(onGranted: () -> Unit, onDenied: () -> Unit) {
@@ -99,5 +83,19 @@ class MapActivity : AppCompatActivity() {
                 "Received perm request code $requestCode with no matching entry in pendingRequests!"
             )
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        try {
+            val state = mapView.saveState(outState)
+            outState.putParcelable(MAP_STATE, state)
+        } catch (ex: Exception) {
+            Log.d(TAG, "Exception: $ex")
+        }
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        mapView.restoreState(MAP_STATE, savedInstanceState)
     }
 }
