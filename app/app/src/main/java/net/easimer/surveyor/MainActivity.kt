@@ -1,7 +1,9 @@
 package net.easimer.surveyor
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +14,12 @@ import net.easimer.surveyor.data.ui.Recording
 import net.easimer.surveyor.data.ui.RecordingRecyclerView
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : PermissionCheckedActivity() {
+    companion object {
+        const val EXTRA_REQUEST = "MainActivity.EXTRA_REQUEST"
+        const val REQUEST_STOP_RECORDING = "MainActivity.REQUEST_STOP_RECORDING"
+        private val TAG = "MainActivity"
+    }
     private lateinit var recyclerView : RecordingRecyclerView
     private val listOfRecordings = LinkedList<Recording>()
 
@@ -44,6 +51,22 @@ class MainActivity : AppCompatActivity() {
         recyclerView.viewAdapter.submitList(listOfRecordings)
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
+        intent?.extras?.getString(EXTRA_REQUEST)?.also {
+            when(it) {
+                REQUEST_STOP_RECORDING -> {
+                    Log.d(TAG, "Received request REQUEST_STOP_RECORDING")
+                    Recorder.tryStopService(this)
+                }
+                else -> {
+                    Log.d(TAG, "Received UNIMPLEMENTED request $it")
+                }
+            }
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -57,9 +80,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onNewRecordingButtonPressed() {
-        val intent = Intent(this, MapActivity::class.java).apply {
-            putExtra(MapActivity.KIND, MapActivity.KIND_DYNAMIC)
+        val perms = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        requestPermissions(perms) { granted ->
+            // All permissions have been granted
+            if(perms.all { x -> x in granted }) {
+                val intent = Intent(this, MapActivity::class.java).apply {
+                    putExtra(MapActivity.KIND, MapActivity.KIND_DYNAMIC)
+                }
+                startActivity(intent)
+            }
         }
-        startActivity(intent)
     }
 }

@@ -1,0 +1,68 @@
+package net.easimer.surveyor
+
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.graphics.Color
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
+
+class RecorderNotification(private val ctx: Service) {
+    private val stopIntent = Intent(ctx, MainActivity::class.java)
+        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        .let {
+            it.putExtra(MainActivity.EXTRA_REQUEST, MainActivity.REQUEST_STOP_RECORDING)
+            PendingIntent.getActivity(
+                ctx,
+                0,
+                it,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+    private val actTerminate =
+        NotificationCompat.Action.Builder(R.drawable.stop, ctx.getText(R.string.stop_recording), stopIntent)
+            .build()
+    private val notificationBuilderTemplate = makeNotificationBuilder()
+        .setContentTitle(ctx.getText(R.string.notification_recording))
+        .setSmallIcon(R.drawable.ic_launcher_foreground) // TODO: temp icon
+        .addAction(actTerminate)
+        .setOngoing(true)
+
+    private fun makeNotificationBuilder(): NotificationCompat.Builder {
+        val chanId = "net.easimer.surveyor.notifychan.recorder"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notifyMan = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            makeNotificationChannel(notifyMan, chanId)
+            return NotificationCompat.Builder(ctx, chanId)
+        } else {
+            return NotificationCompat.Builder(ctx)
+        }
+    }
+
+    fun create() {
+        val builder = notificationBuilderTemplate
+        ctx.startForeground(1, builder.build())
+    }
+
+    fun remove() {
+        ctx.stopForeground(true)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun makeNotificationChannel(notifyMan: NotificationManager, chanId: String) {
+        val maybeChannel = notifyMan.getNotificationChannel(chanId)
+        if(maybeChannel == null) {
+            val channel =
+                NotificationChannel(chanId, chanId, NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = "Surveyor Service Channel"
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            notifyMan.createNotificationChannel(channel)
+        }
+    }
+}

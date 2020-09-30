@@ -39,9 +39,19 @@ class MapActivity : AppCompatActivity() {
         setContentView(R.layout.activity_map)
         val mapContainer = findViewById<LinearLayout>(R.id.map_container)
 
+        val startService = intent?.extras?.run {
+            val kind = getInt(KIND)
+
+            return@run kind == KIND_DYNAMIC
+        } ?: false
+
         checkRwPermissions(
             onGranted = {
                 makeMapView(mapContainer)
+
+                if(startService) {
+                    Recorder.tryStartService(this)
+                }
             },
             onDenied = {
                 Log.d(TAG, "User denies ext storage rw perm, finishing")
