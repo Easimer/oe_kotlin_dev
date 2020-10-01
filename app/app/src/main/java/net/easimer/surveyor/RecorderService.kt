@@ -9,14 +9,22 @@ import android.os.HandlerThread
 import android.util.Log
 import androidx.lifecycle.LifecycleService
 import com.google.android.gms.location.*
+import java.util.*
 
 class RecorderService : LifecycleService() {
     private val TAG = "RecorderService"
     private lateinit var notification : RecorderNotification
+
+    private val gpsThread = HandlerThread("ServiceGPSThread")
+    private lateinit var gpsThreadHandler : Handler
+
     private val ioThread = HandlerThread("ServiceIOThread")
-    private lateinit var handler : Handler
+    private lateinit var ioThreadHandler : Handler
+
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+
+    private val track = LinkedList<net.easimer.surveyor.data.Location>()
 
     override fun onCreate() {
         super.onCreate()
@@ -30,6 +38,8 @@ class RecorderService : LifecycleService() {
 
         notification = RecorderNotification(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        Recorder.setServiceInstance(this)
     }
 
     override fun onDestroy() {
@@ -37,8 +47,8 @@ class RecorderService : LifecycleService() {
         Log.d(TAG, "Destroying")
 
         notification.remove()
-        ioThread.quitSafely()
-        ioThread.join()
+        gpsThread.quitSafely()
+        gpsThread.join()
 
         stopLocationUpdates()
     }
@@ -46,11 +56,13 @@ class RecorderService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
+        gpsThread.start()
+        gpsThreadHandler = Handler(gpsThread.looper)
         ioThread.start()
-        handler = Handler(ioThread.looper)
+        ioThreadHandler = Handler(ioThread.looper)
 
-        handler.post {
-            Log.d(TAG, "Entered IO thread")
+        gpsThreadHandler.post {
+            Log.d(TAG, "Entered GPS thread")
             notification.create()
 
             startLocationUpdates()
@@ -70,7 +82,7 @@ class RecorderService : LifecycleService() {
             fusedLocationClient.requestLocationUpdates(
                 req,
                 locationCallback,
-                ioThread.looper
+                gpsThread.looper
             )
         } else {
             Log.d(TAG, "WE HAVE NO ACCESS_FINE_LOCATION PERMISSION")
@@ -82,11 +94,23 @@ class RecorderService : LifecycleService() {
     }
 
     private fun processLocations(locations: List<Location>) {
-        // TODO: commit to disk
-        // TODO: notify UI (Observer?)
-
         locations.forEach {
             Log.d(TAG, "Received location $it")
+
+            val loc = net.easimer.surveyor.data.Location(it.longitude, it.latitude, it.altitude, it.time)
+            track.add(loc)
+            ioThreadHandler.post {
+                // TODO: commit to disk
+                Recorder.pushLocation(loc)
+            }
         }
+    }
+
+    fun requestFullLocationUpdate(callback: (locs: List<net.easimer.surveyor.data.Location>) -> Unit): Boolean {
+        ioThreadHandler.post {
+            callback(track)
+        }
+
+        return true
     }
 }

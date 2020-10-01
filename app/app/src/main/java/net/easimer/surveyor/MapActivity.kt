@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import net.easimer.surveyor.data.Location
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -20,7 +21,7 @@ import org.osmdroid.views.overlay.TilesOverlay
 import java.util.*
 
 
-class MapActivity : PermissionCheckedActivity() {
+class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     companion object {
         val KIND = "Kind"
         val KIND_STATIC = 0
@@ -51,6 +52,7 @@ class MapActivity : PermissionCheckedActivity() {
 
                 if(startService) {
                     Recorder.tryStartService(this)
+                    Recorder.subscribeToLocationUpdates(this)
                 }
             },
             onDenied = {
@@ -58,6 +60,12 @@ class MapActivity : PermissionCheckedActivity() {
                 finish()
             }
         )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Recorder.unsubscribeFromLocationUpdates(this)
     }
 
     private fun makeMapView(mapContainer: LinearLayout) {
@@ -88,5 +96,12 @@ class MapActivity : PermissionCheckedActivity() {
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         mapView.restoreState(MAP_STATE, savedInstanceState)
+    }
+
+    override fun onLocationUpdate(loc: Location) {
+        runOnUiThread {
+            Log.d(TAG, "Received location update'$loc'!")
+            mapView.jumpTo(loc.latitude, loc.longitude)
+        }
     }
 }
