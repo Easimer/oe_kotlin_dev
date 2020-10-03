@@ -5,14 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import net.easimer.surveyor.data.ui.Recording
+import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.ui.RecordingRecyclerView
-import java.util.*
 
 class MainActivity : PermissionCheckedActivity() {
     companion object {
@@ -21,9 +20,10 @@ class MainActivity : PermissionCheckedActivity() {
         private val TAG = "MainActivity"
     }
     private lateinit var recyclerView : RecordingRecyclerView
-    private val listOfRecordings = LinkedList<Recording>()
+    private lateinit var viewModel: MainScreenViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProviders.of(this).get(MainScreenViewModel::class.java)
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -35,24 +35,21 @@ class MainActivity : PermissionCheckedActivity() {
 
         findViewById<FloatingActionButton>(R.id.start_recording).setOnClickListener { view ->
             onNewRecordingButtonPressed()
-            val idx = listOfRecordings.size
-            val r = Recording(
-                UUID.randomUUID(),
-                "Recording #$idx", "Budapest",
-                Date()
-            )
-            listOfRecordings.add(r)
-            recyclerView.viewAdapter.notifyItemInserted(listOfRecordings.size - 1)
         }
 
         val recyclerViewElem = findViewById<RecyclerView>(R.id.main_list)
         recyclerView = RecordingRecyclerView.createRecyclerView(this, recyclerViewElem)
 
-        recyclerViewElem.apply {
-            addItemDecoration(VerticalSpaceItemDecoration(16))
-        }
+        viewModel.recordings.observe(this, object : Observer<List<Recording>> {
+            override fun onChanged(t: List<Recording>?) {
+                t?.let {
+                    recyclerView.viewAdapter.setRecordings(it)
+                }
+            }
+        })
 
-        recyclerView.viewAdapter.submitList(listOfRecordings)
+
+        
     }
 
     override fun onNewIntent(intent: Intent?) {

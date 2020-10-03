@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 data class RecordingRecyclerView(
     val recyclerView: RecyclerView,
-    val viewAdapter: ListAdapter<Recording, RecyclerView.ViewHolder>,
+    val viewAdapter: RecordingListAdapter,
     val viewManager: RecyclerView.LayoutManager
 ) {
     companion object {

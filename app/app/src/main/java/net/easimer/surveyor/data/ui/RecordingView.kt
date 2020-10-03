@@ -1,18 +1,12 @@
 package net.easimer.surveyor.data.ui
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.drawable.Drawable
-import android.text.TextPaint
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import net.easimer.surveyor.R
 import net.easimer.surveyor.databinding.LayoutRecordingListItemBinding
+import net.easimer.surveyor.data.disk.entities.Recording
 
 class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
     protected val inflater =

@@ -8,7 +8,11 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import androidx.lifecycle.LifecycleService
+import androidx.room.Room
 import com.google.android.gms.location.*
+import net.easimer.surveyor.data.disk.Database
+import net.easimer.surveyor.data.disk.entities.Recording
+import net.easimer.surveyor.data.disk.entities.Trackpoint
 import java.util.*
 
 class RecorderService : LifecycleService() {
@@ -23,6 +27,9 @@ class RecorderService : LifecycleService() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
+
+    private lateinit var database: Database
+    private var recId: Int? = null
 
     private val track = LinkedList<net.easimer.surveyor.data.Location>()
 
@@ -65,6 +72,9 @@ class RecorderService : LifecycleService() {
             Log.d(TAG, "Entered GPS thread")
             notification.create()
 
+            database = Room.databaseBuilder(this, Database::class.java, "database")
+                .build()
+
             startLocationUpdates()
         }
 
@@ -100,7 +110,17 @@ class RecorderService : LifecycleService() {
             val loc = net.easimer.surveyor.data.Location(it.longitude, it.latitude, it.altitude, it.time)
             track.add(loc)
             ioThreadHandler.post {
-                // TODO: commit to disk
+                if(recId == null) {
+                    val newRecording = Recording(0, "Recording", Date(), null, it.longitude, it.latitude)
+                    database.recordings().createRecording(newRecording)
+                    Log.d(TAG, "New recording ID=${newRecording.recId}")
+                    recId = newRecording.recId
+                }
+
+                recId?.let { recId ->
+                    database.trackpoints().insertTrackpoint(Trackpoint(0, recId, it.longitude, it.latitude, Date(it.time)))
+                }
+
                 Recorder.pushLocation(loc)
             }
         }

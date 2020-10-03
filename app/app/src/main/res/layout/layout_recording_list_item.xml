@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="recording" type="net.easimer.surveyor.data.ui.Recording"/>
+        <variable name="recording" type="net.easimer.surveyor.data.disk.entities.Recording"/>
     </data>
     <androidx.cardview.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -18,10 +18,10 @@
             android:text="@{recording.title}"/>
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{recording.location}"/>
+            android:text='@{recording.startLatitude + ", " + recording.startLongitude}'/>
         <TextView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{recording.date.toString()}"/>
+            android:text="@{recording.startDate.toString()}"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>
