@@ -47,9 +47,6 @@ class MainActivity : PermissionCheckedActivity() {
                 }
             }
         })
-
-
-        
     }
 
     override fun onNewIntent(intent: Intent?) {

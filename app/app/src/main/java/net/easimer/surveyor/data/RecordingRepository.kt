@@ -5,7 +5,7 @@ import net.easimer.surveyor.data.disk.RecordingWithTrackpoints
 import net.easimer.surveyor.data.disk.entities.Recording
 
 interface RecordingRepository {
-    fun getRecordingTrackpoints(recId: Int): LiveData<List<RecordingWithTrackpoints>>
+    fun getRecordingTrackpoints(recId: Long): LiveData<RecordingWithTrackpoints>
 
     fun getAll(): LiveData<List<Recording>>
 

@@ -9,13 +9,13 @@ import net.easimer.surveyor.data.disk.entities.Recording
 interface Recordings {
     @Transaction
     @Query("SELECT * FROM recording WHERE recId = :recId")
-    fun getRecordingTrackpoints(recId: Int): LiveData<List<RecordingWithTrackpoints>>
+    fun getRecordingTrackpoints(recId: Long): LiveData<RecordingWithTrackpoints>
 
     @Query("SELECT * FROM recording")
     fun getAll(): LiveData<List<Recording>>
 
     @Insert
-    fun createRecording(recording: Recording)
+    fun createRecording(recording: Recording): Long
 
     @Delete
     fun deleteRecording(recording: Recording)

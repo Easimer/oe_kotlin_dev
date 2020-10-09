@@ -6,8 +6,8 @@ import java.util.*
 
 @Entity
 data class Trackpoint(
-    @PrimaryKey(autoGenerate = true) val waypointId: Int,
-    val recId: Int,
+    @PrimaryKey(autoGenerate = true) val waypointId: Long,
+    val recId: Long,
     val longitude: Double,
     val latitude: Double,
     val date: Date

@@ -29,7 +29,7 @@ class RecorderService : LifecycleService() {
     private lateinit var locationCallback: LocationCallback
 
     private lateinit var database: Database
-    private var recId: Int? = null
+    private var recId: Long? = null
 
     private val track = LinkedList<net.easimer.surveyor.data.Location>()
 
@@ -112,9 +112,8 @@ class RecorderService : LifecycleService() {
             ioThreadHandler.post {
                 if(recId == null) {
                     val newRecording = Recording(0, "Recording", Date(), null, it.longitude, it.latitude)
-                    database.recordings().createRecording(newRecording)
+                    recId = database.recordings().createRecording(newRecording)
                     Log.d(TAG, "New recording ID=${newRecording.recId}")
-                    recId = newRecording.recId
                 }
 
                 recId?.let { recId ->

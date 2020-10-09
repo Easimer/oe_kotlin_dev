@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="trkPt" type="net.easimer.surveyor.data.disk.entities.Trackpoint"/>
+    </data>
+    <androidx.cardview.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        card_view:cardCornerRadius="8dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{"#" + trkPt.waypointId}'/>
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{trkPt.latitude + ", " + trkPt.longitude}'/>
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{trkPt.date.toString()}"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

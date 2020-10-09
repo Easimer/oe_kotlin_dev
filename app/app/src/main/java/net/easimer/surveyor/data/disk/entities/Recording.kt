@@ -6,7 +6,7 @@ import java.util.*
 
 @Entity
 data class Recording(
-    @PrimaryKey(autoGenerate = true) val recId: Int,
+    @PrimaryKey(autoGenerate = true) val recId: Long,
     val title: String,
     val startDate: Date,
     val endDate: Date?,

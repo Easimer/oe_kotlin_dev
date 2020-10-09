@@ -1,10 +1,13 @@
 package net.easimer.surveyor.data.ui
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import net.easimer.surveyor.MapActivity
+import net.easimer.surveyor.RecordingDebugActivity
 import net.easimer.surveyor.databinding.LayoutRecordingListItemBinding
 import net.easimer.surveyor.data.disk.entities.Recording
 
@@ -29,5 +32,16 @@ class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
 
     init {
         addView(binding.root)
+
+        setOnLongClickListener {
+            val recId = recording.recId
+            val intent = Intent(ctx, RecordingDebugActivity::class.java).apply {
+                putExtra(RecordingDebugActivity.RECORDING_ID, recId)
+            }
+
+            ctx.startActivity(intent)
+
+            true
+        }
     }
 }
