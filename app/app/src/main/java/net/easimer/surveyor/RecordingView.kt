@@ -14,12 +14,14 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.CopyrightOverlay
+import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 
 class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
     private val TAG = "RecordingView"
     private val mapView = MapView(ctx)
     private val cfg = Configuration.getInstance()
+    private val polylineOverlay = Polyline(mapView)
 
     init {
         cfg.userAgentValue = "net.easimer.surveyor/0.0 Android osmdroid"
@@ -40,12 +42,19 @@ class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
         val tilesOverlay = TilesOverlay(provider, ctx)
         tilesOverlay.loadingBackgroundColor = Color.TRANSPARENT
         mapView.overlays.add(tilesOverlay)
+
+        mapView.overlays.add(polylineOverlay)
     }
 
     fun jumpTo(lat: Double, lon: Double) {
         val ctl = mapView.controller
         ctl.setZoom(9.5)
         ctl.setCenter(GeoPoint(lat, lon))
+    }
+
+
+    fun appendPoint(latitude: Double, longitude: Double) {
+        polylineOverlay.addPoint(GeoPoint(latitude, longitude))
     }
 
     fun saveState(p: Parcelable?): BaseSavedState? {

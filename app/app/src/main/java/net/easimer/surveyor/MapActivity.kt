@@ -1,6 +1,7 @@
 package net.easimer.surveyor
 
 import android.Manifest
+import android.app.Application
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.icu.text.AlphabeticIndex
@@ -10,7 +11,13 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProviders
 import net.easimer.surveyor.data.Location
+import net.easimer.surveyor.data.RecordingRepository
+import net.easimer.surveyor.data.disk.RecordingRoomRepository
+import net.easimer.surveyor.data.disk.RecordingWithTrackpoints
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -102,6 +109,8 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         runOnUiThread {
             Log.d(TAG, "Received location update'$loc'!")
             mapView.jumpTo(loc.latitude, loc.longitude)
+
+            mapView.appendPoint(loc.latitude, loc.longitude)
         }
     }
 }
