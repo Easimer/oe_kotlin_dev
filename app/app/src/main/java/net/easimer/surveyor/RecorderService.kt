@@ -57,6 +57,8 @@ class RecorderService : LifecycleService() {
         gpsThread.quitSafely()
         gpsThread.join()
 
+        database.close()
+
         stopLocationUpdates()
     }
 
