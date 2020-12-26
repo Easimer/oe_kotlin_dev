@@ -12,4 +12,6 @@ interface RecordingRepository {
     fun createRecording(recording: Recording)
 
     fun deleteRecording(recording: Recording)
+
+    fun updateRecording(recording: Recording)
 }

@@ -38,7 +38,7 @@ class MainActivity : PermissionCheckedActivity() {
         }
 
         val recyclerViewElem = findViewById<RecyclerView>(R.id.main_list)
-        recyclerView = RecordingRecyclerView.createRecyclerView(this, recyclerViewElem)
+        recyclerView = RecordingRecyclerView.createRecyclerView(this, recyclerViewElem, viewModel)
 
         viewModel.recordings.observe(this, object : Observer<List<Recording>> {
             override fun onChanged(t: List<Recording>?) {

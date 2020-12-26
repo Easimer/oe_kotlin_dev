@@ -19,4 +19,7 @@ interface Recordings {
 
     @Delete
     fun deleteRecording(recording: Recording)
+
+    @Update
+    fun updateRecording(recording: Recording)
 }

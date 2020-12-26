@@ -25,4 +25,8 @@ class RecordingRoomRepository(private val app: Application) : RecordingRepositor
     override fun deleteRecording(recording: Recording) {
         db.recordings().deleteRecording(recording)
     }
+
+    override fun updateRecording(recording: Recording) {
+        db.recordings().updateRecording(recording)
+    }
 }

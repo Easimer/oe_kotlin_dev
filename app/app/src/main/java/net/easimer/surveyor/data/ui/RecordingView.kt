@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import net.easimer.surveyor.MapActivity
-import net.easimer.surveyor.RecordingDebugActivity
+import androidx.fragment.app.FragmentActivity
+import net.easimer.surveyor.*
 import net.easimer.surveyor.databinding.LayoutRecordingListItemBinding
 import net.easimer.surveyor.data.disk.entities.Recording
 
-class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
+class RecordingView(private val ctx: Context, private val rm: RecordingManager) : LinearLayout(ctx) {
     protected val inflater =
         ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     protected val binding = LayoutRecordingListItemBinding.inflate(inflater)
@@ -33,15 +33,14 @@ class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
     init {
         addView(binding.root)
 
-        setOnLongClickListener {
-            val recId = recording.recId
-            val intent = Intent(ctx, RecordingDebugActivity::class.java).apply {
-                putExtra(RecordingDebugActivity.RECORDING_ID, recId)
+        if(ctx is FragmentActivity) {
+            setOnLongClickListener {
+                val recId = recording.recId
+                val dlg = RecordingDetailsDialog(ctx, rm, recording)
+                dlg.show(ctx.supportFragmentManager, "RECDETAILS")
+
+                true
             }
-
-            ctx.startActivity(intent)
-
-            true
         }
     }
 }

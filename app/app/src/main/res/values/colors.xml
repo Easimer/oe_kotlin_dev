@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#4E7048</color>
     <color name="colorAccent">#A8F29B</color>
     <color name="colorSplash">#53BD40</color>
+    <color name="colorRecordingTitle">#000000</color>
 </resources>
