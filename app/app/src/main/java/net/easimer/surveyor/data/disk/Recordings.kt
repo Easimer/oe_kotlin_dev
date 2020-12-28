@@ -2,8 +2,8 @@ package net.easimer.surveyor.data.disk
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import net.easimer.surveyor.data.disk.RecordingWithTrackpoints
 import net.easimer.surveyor.data.disk.entities.Recording
+import net.easimer.surveyor.data.disk.entities.Trackpoint
 
 @Dao
 interface Recordings {

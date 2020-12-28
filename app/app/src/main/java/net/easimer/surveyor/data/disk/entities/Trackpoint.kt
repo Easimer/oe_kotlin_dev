@@ -10,5 +10,6 @@ data class Trackpoint(
     val recId: Long,
     val longitude: Double,
     val latitude: Double,
+    val altitude: Double,
     val date: Date
 )

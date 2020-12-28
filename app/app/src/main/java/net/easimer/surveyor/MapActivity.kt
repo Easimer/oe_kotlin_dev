@@ -1,30 +1,11 @@
 package net.easimer.surveyor
 
 import android.Manifest
-import android.app.Application
-import android.content.pm.PackageManager
-import android.graphics.Color
-import android.icu.text.AlphabeticIndex
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.view.View
 import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModelProviders
 import net.easimer.surveyor.data.Location
-import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
-import net.easimer.surveyor.data.disk.RecordingWithTrackpoints
-import org.osmdroid.config.Configuration
-import org.osmdroid.tileprovider.MapTileProviderBasic
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.views.CustomZoomButtonsController
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.CopyrightOverlay
-import org.osmdroid.views.overlay.TilesOverlay
 import java.util.*
 
 
@@ -34,6 +15,8 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         val KIND_STATIC = 0
         val KIND_DYNAMIC = 1
 
+        val REC_ID = "RecordingID"
+
         private val MAP_STATE = "MAP_STATE"
     }
 
@@ -41,6 +24,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     private var pendingRequests = HashMap<Int, Pair<() -> Unit, () -> Unit>>()
     private val TAG = "MapActivity"
     private lateinit var mapView: RecordingView
+    private lateinit var trackPtSrc: MapTrackpointSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,13 +37,28 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
             return@run kind == KIND_DYNAMIC
         } ?: false
 
+        trackPtSrc = if(startService) {
+            MapTrackpointSourceFactory.make(this)
+        } else {
+            val repo = RecordingRoomRepository(application)
+            assert(intent != null && intent.extras != null)
+
+            intent!!.extras!!.let {
+                val recID = it.getLong(REC_ID)
+                MapTrackpointSourceFactory.make(this, repo, recID)
+            }
+        }
+
         checkRwPermissions(
             onGranted = {
                 makeMapView(mapContainer)
 
-                if(startService) {
-                    Recorder.tryStartService(this)
-                    Recorder.subscribeToLocationUpdates(this)
+                trackPtSrc.subscribeToLocationUpdates(this)
+                trackPtSrc.start()
+                trackPtSrc.requestFullLocationUpdate {
+                    it.forEach {
+                        onLocationUpdate(it)
+                    }
                 }
             },
             onDenied = {
@@ -72,7 +71,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     override fun onDestroy() {
         super.onDestroy()
 
-        Recorder.unsubscribeFromLocationUpdates(this)
+        trackPtSrc.unsubscribeFromLocationUpdates(this)
     }
 
     private fun makeMapView(mapContainer: LinearLayout) {

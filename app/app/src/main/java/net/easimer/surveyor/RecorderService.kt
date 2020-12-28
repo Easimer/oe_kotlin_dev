@@ -119,7 +119,7 @@ class RecorderService : LifecycleService() {
                 }
 
                 recId?.let { recId ->
-                    database.trackpoints().insertTrackpoint(Trackpoint(0, recId, it.longitude, it.latitude, Date(it.time)))
+                    database.trackpoints().insertTrackpoint(Trackpoint(0, recId, it.longitude, it.latitude, it.altitude, Date(it.time)))
                 }
 
                 Recorder.pushLocation(loc)

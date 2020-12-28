@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.entities.Recording
+import net.easimer.surveyor.data.disk.entities.Trackpoint
 
 class RecordingRoomRepository(private val app: Application) : RecordingRepository {
     private val db = Room.databaseBuilder(app.applicationContext, Database::class.java, "database").build()

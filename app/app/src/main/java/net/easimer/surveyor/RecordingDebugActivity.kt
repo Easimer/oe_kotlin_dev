@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
 import net.easimer.surveyor.data.disk.RecordingWithTrackpoints
+import net.easimer.surveyor.data.disk.entities.Trackpoint
 import net.easimer.surveyor.data.ui.TrackpointRecyclerView
 
 class RecordingDebugActivity : AppCompatActivity() {
