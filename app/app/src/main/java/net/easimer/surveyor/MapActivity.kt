@@ -6,6 +6,8 @@ import android.util.Log
 import android.widget.LinearLayout
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
+import net.easimer.surveyor.trackpointsource.MapTrackpointSource
+import net.easimer.surveyor.trackpointsource.MapTrackpointSourceFactory
 import java.util.*
 
 

@@ -1,11 +1,13 @@
-package net.easimer.surveyor
+package net.easimer.surveyor.trackpointsource
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import net.easimer.surveyor.LocationUpdateObserver
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.RecordingRepository
 
-class ReplayMapTrackpointSource(private val owner: LifecycleOwner, private val repo: RecordingRepository, private val recID: Long) : MapTrackpointSource {
+class ReplayMapTrackpointSource(private val owner: LifecycleOwner, private val repo: RecordingRepository, private val recID: Long) :
+    MapTrackpointSource {
     override fun start() {
     }
 

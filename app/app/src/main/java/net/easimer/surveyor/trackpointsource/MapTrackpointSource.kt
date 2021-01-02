@@ -1,5 +1,6 @@
-package net.easimer.surveyor
+package net.easimer.surveyor.trackpointsource
 
+import net.easimer.surveyor.LocationUpdateObserver
 import net.easimer.surveyor.data.Location
 
 interface MapTrackpointSource {
