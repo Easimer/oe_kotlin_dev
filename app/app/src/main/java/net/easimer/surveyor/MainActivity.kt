@@ -1,6 +1,7 @@
 package net.easimer.surveyor
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,8 +9,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import net.easimer.surveyor.data.disk.RecordingRoomRepository
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.ui.RecordingRecyclerView
 
@@ -21,9 +23,11 @@ class MainActivity : PermissionCheckedActivity() {
     }
     private lateinit var recyclerView : RecordingRecyclerView
     private lateinit var viewModel: MainScreenViewModel
+    private val activityStarter = ActivityStarterAndroid(application)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(this).get(MainScreenViewModel::class.java)
+        val vmFactory = ViewModelFactory(application, RecordingRoomRepository(application), activityStarter)
+        viewModel = ViewModelProvider(this, vmFactory).get(MainScreenViewModel::class.java)
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -88,11 +92,25 @@ class MainActivity : PermissionCheckedActivity() {
         requestPermissions(perms) { granted ->
             // All permissions have been granted
             if(perms.all { x -> x in granted }) {
-                val intent = Intent(this, MapActivity::class.java).apply {
-                    putExtra(MapActivity.KIND, MapActivity.KIND_DYNAMIC)
-                }
-                startActivity(intent)
+                activityStarter.startMapActivity()
             }
+        }
+    }
+
+    class ActivityStarterAndroid(private val ctx: Context) : ActivityStarter {
+        override fun startMapActivity(recId: Long) {
+            val intent = Intent(ctx, MapActivity::class.java).apply {
+                putExtra(MapActivity.KIND, MapActivity.KIND_STATIC)
+                putExtra(MapActivity.REC_ID, recId)
+            }
+            ctx.startActivity(intent)
+        }
+
+        fun startMapActivity() {
+            val intent = Intent(ctx, MapActivity::class.java).apply {
+                putExtra(MapActivity.KIND, MapActivity.KIND_DYNAMIC)
+            }
+            ctx.startActivity(intent)
         }
     }
 }
