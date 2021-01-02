@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.widget.LinearLayout
-import org.osmdroid.api.IGeoPoint
+import net.easimer.surveyor.data.ui.IRecordingView
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -17,7 +17,7 @@ import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 
-class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
+class RecordingView(private val ctx: Context) : LinearLayout(ctx), IRecordingView {
     private val TAG = "RecordingView"
     private val mapView = MapView(ctx)
     private val cfg = Configuration.getInstance()
@@ -46,18 +46,18 @@ class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
         mapView.overlays.add(polylineOverlay)
     }
 
-    fun jumpTo(lat: Double, lon: Double) {
+    override fun jumpTo(lat: Double, lon: Double) {
         val ctl = mapView.controller
         ctl.setZoom(9.5)
         ctl.setCenter(GeoPoint(lat, lon))
     }
 
 
-    fun appendPoint(latitude: Double, longitude: Double) {
+    override fun appendPoint(latitude: Double, longitude: Double) {
         polylineOverlay.addPoint(GeoPoint(latitude, longitude))
     }
 
-    fun saveState(p: Parcelable?): BaseSavedState? {
+    override fun saveState(p: Parcelable?): BaseSavedState? {
         mapView.mapCenter?.apply {
             val zoomLevel = mapView.zoomLevelDouble
             return State(p, Pair(latitude, longitude), zoomLevel)
@@ -66,7 +66,7 @@ class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
         return null
     }
 
-    fun restoreState(it: BaseSavedState) {
+    override fun restoreState(it: BaseSavedState) {
         if(it is State) {
             val ctl = mapView.controller
             val gp = GeoPoint(it.center.first, it.center.second)
@@ -101,6 +101,10 @@ class RecordingView(private val ctx: Context) : LinearLayout(ctx) {
         } else {
             super.onRestoreInstanceState(BaseSavedState.EMPTY_STATE)
         }
+    }
+
+    override fun restoreState(key: String, savedInstanceState: Bundle) {
+        restoreState(key, savedInstanceState, false)
     }
 
     data class State(

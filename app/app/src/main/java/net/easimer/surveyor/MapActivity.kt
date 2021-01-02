@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.LinearLayout
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
+import net.easimer.surveyor.data.ui.IRecordingView
 import net.easimer.surveyor.trackpointsource.MapTrackpointSource
 import net.easimer.surveyor.trackpointsource.MapTrackpointSourceFactory
 import java.util.*
@@ -25,7 +26,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     private var nextRequestCode = 0
     private var pendingRequests = HashMap<Int, Pair<() -> Unit, () -> Unit>>()
     private val TAG = "MapActivity"
-    private lateinit var mapView: RecordingView
+    private lateinit var mapView: IRecordingView
     private lateinit var trackPtSrc: MapTrackpointSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,8 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         setContentView(R.layout.activity_map)
         val mapContainer = findViewById<LinearLayout>(R.id.map_container)
 
-        val startService = intent?.extras?.run {
+        assert(intent != null && intent.extras != null)
+        val startService = intent!!.extras!!.run {
             val kind = getInt(KIND)
 
             return@run kind == KIND_DYNAMIC
@@ -43,7 +45,6 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
             MapTrackpointSourceFactory.make(this)
         } else {
             val repo = RecordingRoomRepository(application)
-            assert(intent != null && intent.extras != null)
 
             intent!!.extras!!.let {
                 val recID = it.getLong(REC_ID)
@@ -77,7 +78,8 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     }
 
     private fun makeMapView(mapContainer: LinearLayout) {
-        mapView = RecordingView(this)
+        val mapView = RecordingView(this)
+        this.mapView = mapView
         mapContainer.addView(mapView)
     }
 
