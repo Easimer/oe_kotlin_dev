@@ -23,9 +23,10 @@ class MainActivity : PermissionCheckedActivity() {
     }
     private lateinit var recyclerView : RecordingRecyclerView
     private lateinit var viewModel: MainScreenViewModel
-    private val activityStarter = ActivityStarterAndroid(application)
+    private lateinit var activityStarter: ActivityStarter
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        activityStarter = ActivityStarterAndroid(this)
         val vmFactory = ViewModelFactory(application, RecordingRoomRepository(application), activityStarter)
         viewModel = ViewModelProvider(this, vmFactory).get(MainScreenViewModel::class.java)
         setTheme(R.style.AppTheme_NoActionBar)
@@ -106,7 +107,7 @@ class MainActivity : PermissionCheckedActivity() {
             ctx.startActivity(intent)
         }
 
-        fun startMapActivity() {
+        override fun startMapActivity() {
             val intent = Intent(ctx, MapActivity::class.java).apply {
                 putExtra(MapActivity.KIND, MapActivity.KIND_DYNAMIC)
             }
