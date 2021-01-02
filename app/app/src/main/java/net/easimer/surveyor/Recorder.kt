@@ -34,7 +34,7 @@ object Recorder {
     @Synchronized
     fun tryStopService(ctx: Context): Boolean {
         if(serviceIntent != null) {
-            Log.d(TAG, "Stopping the camera service")
+            Log.d(TAG, "Stopping the recorder service")
             service = null
             ctx.stopService(serviceIntent)
             serviceIntent = null

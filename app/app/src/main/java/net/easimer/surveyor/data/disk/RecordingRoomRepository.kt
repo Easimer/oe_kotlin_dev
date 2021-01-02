@@ -7,6 +7,7 @@ import androidx.room.Room
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.disk.entities.Trackpoint
+import java.util.*
 
 class RecordingRoomRepository(private val app: Application) : RecordingRepository {
     private val db = Room.databaseBuilder(app.applicationContext, Database::class.java, "database").build()
@@ -19,8 +20,8 @@ class RecordingRoomRepository(private val app: Application) : RecordingRepositor
         return db.recordings().getAll()
     }
 
-    override fun createRecording(recording: Recording) {
-        db.recordings().createRecording(recording)
+    override fun createRecording(recording: Recording): Long {
+        return db.recordings().createRecording(recording)
     }
 
     override fun deleteRecording(recording: Recording) {
@@ -29,5 +30,9 @@ class RecordingRoomRepository(private val app: Application) : RecordingRepositor
 
     override fun updateRecording(recording: Recording) {
         db.recordings().updateRecording(recording)
+    }
+
+    override fun appendTrackpoint(recId: Long, longitude: Double, latitude: Double, altitude: Double, date: Date) {
+        db.trackpoints().insertTrackpoint(Trackpoint(0, recId, longitude, latitude, altitude, date))
     }
 }
