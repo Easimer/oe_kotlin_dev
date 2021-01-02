@@ -10,7 +10,7 @@ import java.util.*
 object Recorder {
     private val TAG = "Recorder"
     private var serviceIntent: Intent? = null
-    private var service: RecorderService? = null
+    private var service: IRecorderService? = null
     private val observers = LinkedList<LocationUpdateObserver>()
 
     @Synchronized
@@ -65,7 +65,7 @@ object Recorder {
     }
 
     @Synchronized
-    fun setServiceInstance(svc: RecorderService) {
+    fun setServiceInstance(svc: IRecorderService) {
         service = svc
     }
 

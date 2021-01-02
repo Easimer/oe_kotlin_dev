@@ -11,50 +11,32 @@ import net.easimer.surveyor.data.disk.entities.Recording
 import java.lang.IllegalStateException
 import java.util.*
 
-class RecorderModel(private val ctx: Context, private val repo: RecordingRepository) {
+class RecorderModel(
+    private val ctx: Context,
+    private val repo: RecordingRepository,
+    private val gpsClient: IGPSClient) {
     private val TAG = "RecorderModel"
-    private val gpsThread = HandlerThread("ServiceGPSThread")
-    private val gpsThreadHandler : Handler
 
     private val ioThread = HandlerThread("ServiceIOThread")
     private val ioThreadHandler : Handler
-
-    private val fusedLocationClient: FusedLocationProviderClient
-    private val locationCallback: LocationCallback
 
     private val track = LinkedList<net.easimer.surveyor.data.Location>()
     private var recId: Long? = null
 
     init {
-        gpsThread.start()
         ioThread.start()
-
-        gpsThreadHandler = Handler(gpsThread.looper)
         ioThreadHandler = Handler(ioThread.looper)
 
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                locationResult ?: return
-                processLocations(locationResult.locations)
-            }
-        }
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx)
+        gpsClient.setCallback({l -> processLocations(l)})
     }
 
     fun start() {
-        gpsThreadHandler.post {
-            Log.d(TAG, "Entered GPS thread")
-            startLocationUpdates()
-        }
+        gpsClient.start()
     }
 
     fun shutdown() {
-        stopLocationUpdates()
-        gpsThread.quitSafely()
         ioThread.quitSafely()
-
-        gpsThread.join()
+        gpsClient.shutdown()
         ioThread.join()
     }
 
@@ -64,29 +46,6 @@ class RecorderModel(private val ctx: Context, private val repo: RecordingReposit
         }
 
         return true
-    }
-
-    private fun startLocationUpdates() {
-        val req = LocationRequest.create()
-        req.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        req.interval = 15 * 1000
-        req.fastestInterval = 10 * 1000
-        req.smallestDisplacement = 0.0f
-
-        try {
-            fusedLocationClient.requestLocationUpdates(
-                req,
-                locationCallback,
-                gpsThread.looper
-            )
-        } catch(ex: SecurityException) {
-            Log.d(TAG, "startLocationUpdates failed. Probably missing an ACCESS_FINE_LOCATION permission. How did we get to this point?")
-            throw IllegalStateException(ex)
-        }
-    }
-
-    private fun stopLocationUpdates() {
-        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
     private fun processLocations(locations: List<Location>) {

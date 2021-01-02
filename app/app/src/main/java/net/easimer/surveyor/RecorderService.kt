@@ -17,7 +17,7 @@ import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.disk.entities.Trackpoint
 import java.util.*
 
-class RecorderService : LifecycleService() {
+class RecorderService : LifecycleService(), IRecorderService {
     private val TAG = "RecorderService"
     private lateinit var model: RecorderModel
     private lateinit var notification : RecorderNotification
@@ -25,7 +25,8 @@ class RecorderService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        model = RecorderModel(this, RecordingRoomRepository(application))
+        val gpsClient = GPSClient(this)
+        model = RecorderModel(this, RecordingRoomRepository(application), gpsClient)
         notification = RecorderNotification(this)
         Recorder.setServiceInstance(this)
     }
@@ -51,7 +52,7 @@ class RecorderService : LifecycleService() {
         return START_STICKY
     }
 
-    fun requestFullLocationUpdate(callback: (locs: List<net.easimer.surveyor.data.Location>) -> Unit): Boolean {
+    override fun requestFullLocationUpdate(callback: (locs: List<net.easimer.surveyor.data.Location>) -> Unit): Boolean {
         return model.requestFullLocationUpdate(callback)
     }
 }
