@@ -26,7 +26,7 @@ class RecorderService : LifecycleService(), IRecorderService {
         super.onCreate()
 
         val gpsClient = GPSClient(this)
-        model = RecorderModel(this, RecordingRoomRepository(application), gpsClient)
+        model = RecorderModel(RecordingRoomRepository(application), gpsClient)
         notification = RecorderNotification(this)
         Recorder.setServiceInstance(this)
     }

@@ -12,7 +12,6 @@ import java.lang.IllegalStateException
 import java.util.*
 
 class RecorderModel(
-    private val ctx: Context,
     private val repo: RecordingRepository,
     private val gpsClient: IGPSClient) {
     private val TAG = "RecorderModel"
