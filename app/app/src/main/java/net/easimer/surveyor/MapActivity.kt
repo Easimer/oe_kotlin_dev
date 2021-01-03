@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.LinearLayout
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
-import net.easimer.surveyor.data.ui.IRecordingView
+import net.easimer.surveyor.data.ui.IRecordingMapView
 import net.easimer.surveyor.trackpointsource.MapTrackpointSource
 import net.easimer.surveyor.trackpointsource.MapTrackpointSourceFactory
 import java.util.*
@@ -26,7 +26,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     private var nextRequestCode = 0
     private var pendingRequests = HashMap<Int, Pair<() -> Unit, () -> Unit>>()
     private val TAG = "MapActivity"
-    private lateinit var mapView: IRecordingView
+    private lateinit var mapView: IRecordingMapView
     private lateinit var trackPtSrc: MapTrackpointSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +78,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     }
 
     private fun makeMapView(mapContainer: LinearLayout) {
-        val mapView = RecordingView(this)
+        val mapView = RecordingMapView(this)
         this.mapView = mapView
         mapContainer.addView(mapView)
     }

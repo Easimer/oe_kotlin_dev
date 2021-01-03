@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.widget.LinearLayout
-import net.easimer.surveyor.data.ui.IRecordingView
+import net.easimer.surveyor.data.ui.IRecordingMapView
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -17,7 +17,7 @@ import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
 
-class RecordingView(private val ctx: Context) : LinearLayout(ctx), IRecordingView {
+class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecordingMapView {
     private val TAG = "RecordingView"
     private val mapView = MapView(ctx)
     private val cfg = Configuration.getInstance()
