@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.widget.LinearLayout
-import net.easimer.surveyor.data.ui.IRecordingMapView
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory

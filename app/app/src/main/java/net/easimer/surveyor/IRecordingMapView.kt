@@ -1,4 +1,4 @@
-package net.easimer.surveyor.data.ui
+package net.easimer.surveyor
 
 import android.os.Bundle
 import android.os.Parcelable
