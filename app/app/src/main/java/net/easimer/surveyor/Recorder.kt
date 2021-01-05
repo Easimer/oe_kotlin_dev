@@ -45,6 +45,7 @@ object Recorder {
     }
 
     @Synchronized
+    @Deprecated("Use forEachObserver instead")
     fun pushLocation(location: Location) {
         observers.forEach {
             it.onLocationUpdate(location)
@@ -57,6 +58,11 @@ object Recorder {
             return requestFullLocationUpdate(callback)
         }
         return false
+    }
+
+    @Synchronized
+    fun forEachObserver(l: (o: LocationUpdateObserver) -> Unit) {
+        observers.forEach(l)
     }
 
     @Synchronized
@@ -77,5 +83,13 @@ object Recorder {
     @Synchronized
     fun unsubscribeFromLocationUpdates(observer: LocationUpdateObserver) {
         observers.remove(observer)
+    }
+
+    @Synchronized
+    fun requestMarkPointOfInterest(title: String): Boolean {
+        service?.run {
+            return markPointOfInterest(title)
+        }
+        return false
     }
 }

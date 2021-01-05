@@ -3,7 +3,9 @@ package net.easimer.surveyor
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
 import net.easimer.surveyor.trackpointsource.MapTrackpointSource
@@ -38,7 +40,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
             return@run kind == KIND_DYNAMIC
         } ?: false
 
-        trackPtSrc = if(startService) {
+        trackPtSrc = if (startService) {
             MapTrackpointSourceFactory.make(this)
         } else {
             val repo = RecordingRoomRepository(application)
@@ -47,6 +49,16 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
                 val recID = it.getLong(REC_ID)
                 MapTrackpointSourceFactory.make(this, repo, recID)
             }
+        }
+
+        val btnMarkPOI = findViewById<FloatingActionButton>(R.id.mark_point_of_interest)
+        if (trackPtSrc.canMarkPointOfInterest()) {
+            btnMarkPOI.setOnClickListener { view ->
+                showPOIDialog()
+            }
+        } else {
+            // Hide btn
+            btnMarkPOI.visibility = View.INVISIBLE
         }
 
         checkRwPermissions(
@@ -112,5 +124,15 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
 
             mapView.appendPoint(loc.latitude, loc.longitude)
         }
+    }
+
+    override fun onPointOfInterestUpdate(title: String, location: Location) {
+        Log.d(TAG, "POIDialog callback: $title $location")
+        // TODO: mapView.appendPointOfInterest(it.latitude, it.longitude)
+    }
+
+    private fun showPOIDialog() {
+        val dlg = POIDialog(this, trackPtSrc)
+        dlg.show(supportFragmentManager, "POITITLEDLG")
     }
 }

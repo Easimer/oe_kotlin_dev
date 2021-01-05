@@ -8,4 +8,7 @@ interface MapTrackpointSource {
     fun subscribeToLocationUpdates(observer: LocationUpdateObserver)
     fun unsubscribeFromLocationUpdates(observer: LocationUpdateObserver)
     fun requestFullLocationUpdate(callback: (locs: List<Location>) -> Unit)
+
+    fun canMarkPointOfInterest(): Boolean
+    fun markPointOfInterest(title: String)
 }

@@ -3,6 +3,7 @@ package net.easimer.surveyor.trackpointsource
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import net.easimer.surveyor.LocationUpdateObserver
+import net.easimer.surveyor.Recorder
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.RecordingRepository
 
@@ -28,5 +29,12 @@ class ReplayMapTrackpointSource(private val owner: LifecycleOwner, private val r
                 callback(locs)
             }
         })
+    }
+
+    override fun canMarkPointOfInterest(): Boolean {
+        return false
+    }
+
+    override fun markPointOfInterest(title: String) {
     }
 }

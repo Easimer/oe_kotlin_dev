@@ -7,6 +7,7 @@ import android.os.HandlerThread
 import android.util.Log
 import com.google.android.gms.location.*
 import java.lang.IllegalStateException
+import java.security.Security
 
 class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
     private val TAG = "GPSClient"
@@ -43,6 +44,23 @@ class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
         locationResult ?: return
         callback?.let {
             it(locationResult.locations)
+        }
+    }
+
+    override fun getCurrentLocationImmediately(callback: (location: Location) -> Unit) {
+        try {
+            fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener {
+                it?.let {
+                    Log.d(TAG, "getCurrentLocationImmediately: received accurate location")
+                    callback(it)
+                } ?: Log.d(TAG, "getCurrentLocationImmediately: location was null")
+            }.addOnFailureListener {
+                Log.d(TAG, "getCurrentLocationImmediately: task failed ex=$it")
+            }
+            Log.d(TAG, "getCurrentLocationImmediately: request in flight")
+        } catch(ex: SecurityException) {
+            Log.d(TAG, "getCurrentLocationImmediately failed. Probably missing an ACCESS_FINE_LOCATION permission. How did we get to this point?")
+            throw IllegalStateException(ex)
         }
     }
 

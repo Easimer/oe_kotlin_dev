@@ -1,15 +1,13 @@
 package net.easimer.surveyor
 
-import android.content.Context
 import android.location.Location
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
-import com.google.android.gms.location.*
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.entities.Recording
-import java.lang.IllegalStateException
 import java.util.*
+import java.util.concurrent.LinkedBlockingQueue
 
 class RecorderModel(
     private val repo: RecordingRepository,
@@ -21,6 +19,11 @@ class RecorderModel(
 
     private val track = LinkedList<net.easimer.surveyor.data.Location>()
     private var recId: Long? = null
+
+    private data class PendingPOIMarkRequest(
+        val title: String
+    )
+    private val pendingPOIMarkRequests = LinkedBlockingQueue<PendingPOIMarkRequest>()
 
     init {
         ioThread.start()
@@ -47,12 +50,35 @@ class RecorderModel(
         return true
     }
 
+    private fun tryServePOIMarkRequest(it: Location) {
+        val loc = net.easimer.surveyor.data.Location(it.longitude, it.latitude, it.altitude, it.time)
+        val req = pendingPOIMarkRequests.poll()
+        req?.run {
+            // TODO: insert POI
+            Log.d(TAG, "serving POI req: $title")
+
+            Recorder.forEachObserver { observer ->
+                observer.onPointOfInterestUpdate(title, loc)
+            }
+        }
+    }
+
+    fun markPointOfInterest(title: String): Boolean {
+        pendingPOIMarkRequests.add(PendingPOIMarkRequest(title))
+
+        gpsClient.getCurrentLocationImmediately {
+            tryServePOIMarkRequest(it)
+        }
+        return true
+    }
+
     private fun processLocations(locations: List<Location>) {
         locations.forEach {
             Log.d(TAG, "Received location $it")
 
             val loc = net.easimer.surveyor.data.Location(it.longitude, it.latitude, it.altitude, it.time)
             track.add(loc)
+            tryServePOIMarkRequest(it)
             ioThreadHandler.post {
                 if(recId == null) {
                     val newRecording =

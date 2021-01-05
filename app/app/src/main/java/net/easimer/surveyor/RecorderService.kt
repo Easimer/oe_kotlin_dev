@@ -55,4 +55,8 @@ class RecorderService : LifecycleService(), IRecorderService {
     override fun requestFullLocationUpdate(callback: (locs: List<net.easimer.surveyor.data.Location>) -> Unit): Boolean {
         return model.requestFullLocationUpdate(callback)
     }
+
+    override fun markPointOfInterest(title: String): Boolean {
+        return model.markPointOfInterest(title)
+    }
 }

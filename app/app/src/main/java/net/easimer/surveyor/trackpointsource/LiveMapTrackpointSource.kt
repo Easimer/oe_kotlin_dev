@@ -21,4 +21,12 @@ class LiveMapTrackpointSource(private val ctx: Context) : MapTrackpointSource {
     override fun requestFullLocationUpdate(callback: (locs: List<Location>) -> Unit) {
         Recorder.requestFullLocationUpdate(callback)
     }
+
+    override fun canMarkPointOfInterest(): Boolean {
+        return true
+    }
+
+    override fun markPointOfInterest(title: String) {
+        Recorder.requestMarkPointOfInterest(title)
+    }
 }
