@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class PointOfInterest(
-    @PrimaryKey(autoGenerate = true) val poiId: Int,
-    val recId: Int,
+    @PrimaryKey(autoGenerate = true) val poiId: Long,
+    val recId: Long,
     val title: String,
     val longitude: Double,
     val latitude: Double

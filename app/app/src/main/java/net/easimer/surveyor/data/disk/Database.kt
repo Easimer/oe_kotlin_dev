@@ -13,4 +13,5 @@ import net.easimer.surveyor.data.disk.entities.Trackpoint
 abstract class Database : RoomDatabase() {
     abstract fun recordings() : Recordings
     abstract fun trackpoints() : Trackpoints
+    abstract fun pointsOfInterest() : PointsOfInterest
 }

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.Room
 import net.easimer.surveyor.data.RecordingRepository
+import net.easimer.surveyor.data.disk.entities.PointOfInterest
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.disk.entities.Trackpoint
 import java.util.*
@@ -34,5 +35,9 @@ class RecordingRoomRepository(private val app: Application) : RecordingRepositor
 
     override fun appendTrackpoint(recId: Long, longitude: Double, latitude: Double, altitude: Double, date: Date) {
         db.trackpoints().insertTrackpoint(Trackpoint(0, recId, longitude, latitude, altitude, date))
+    }
+
+    override fun addPointOfInterest(recId: Long, title: String, longitude: Double, latitude: Double) {
+        db.pointsOfInterest().insertPoint(PointOfInterest(0, recId, title, longitude, latitude))
     }
 }
