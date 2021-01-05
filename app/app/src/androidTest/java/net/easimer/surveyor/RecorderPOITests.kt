@@ -33,7 +33,8 @@ class RecorderPOITests {
         every { observer.onLocationUpdate(loc = any()) } answers { Unit }
         every { observer.onPointOfInterestUpdate(title = any(), loc = any()) } answers { Unit }
 
-        //every { repo.}
+        every { repo.addPointOfInterest(recId = any(), title = any(), longitude = any(), latitude = any())} answers { Unit }
+        every { repo.createRecording(recording = any()) } returns 35
 
         Recorder.subscribeToLocationUpdates(observer)
     }
@@ -73,8 +74,8 @@ class RecorderPOITests {
         val date = Date.from(Instant.now())
         locReqCallback.captured(makeLocation(10.0, 20.0, 30.0, date.time))
 
-        //verify(exactly = 1) { repo.insertPointOfInterest(recId = any(), )}
-        throw Exception()
+        verify(exactly = 1) { repo.createRecording(recording = any()) }
+        verify(exactly = 1) { repo.addPointOfInterest(recId = 35, title = poiTitle, latitude = 10.0, longitude = 20.0) }
     }
 
     private fun makeLocation(lon: Double, lat: Double, alt: Double, time: Long): Location {
