@@ -54,8 +54,17 @@ class RecorderModel(
         val loc = net.easimer.surveyor.data.Location(it.longitude, it.latitude, it.altitude, it.time)
         val req = pendingPOIMarkRequests.poll()
         req?.run {
-            // TODO: insert POI
             Log.d(TAG, "serving POI req: $title")
+
+            ioThreadHandler.post {
+                if(recId == null) {
+                    createRecording(loc.longitude, loc.latitude)
+                }
+
+                recId?.let { recId ->
+                    repo.addPointOfInterest(recId, title, loc.longitude, loc.latitude)
+                }
+            }
 
             Recorder.forEachObserver { observer ->
                 observer.onPointOfInterestUpdate(title, loc)
@@ -81,10 +90,7 @@ class RecorderModel(
             tryServePOIMarkRequest(it)
             ioThreadHandler.post {
                 if(recId == null) {
-                    val newRecording =
-                        Recording(0, "Recording", Date(), null, it.longitude, it.latitude)
-                    recId = repo.createRecording(newRecording)
-                    Log.d(TAG, "New recording ID=${recId}")
+                    createRecording(it.longitude, it.latitude)
                 }
 
                 recId?.let { recId ->
@@ -94,5 +100,12 @@ class RecorderModel(
                 Recorder.pushLocation(loc)
             }
         }
+    }
+
+    private fun createRecording(longitude: Double, latitude: Double) {
+        val newRecording =
+            Recording(0, "Recording", Date(), null, longitude, latitude)
+        recId = repo.createRecording(newRecording)
+        Log.d(TAG, "New recording ID=${recId}")
     }
 }

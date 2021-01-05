@@ -52,6 +52,8 @@ class RecorderPOITests {
         val date = Date.from(Instant.now())
         locReqCallback.captured(makeLocation(10.0, 20.0, 30.0, date.time))
 
+        mdl.shutdown()
+
         verify(exactly = 1) { gpsClient.getCurrentLocationImmediately(callback = any())}
     }
 
@@ -62,6 +64,8 @@ class RecorderPOITests {
 
         val date = Date.from(Instant.now())
         locReqCallback.captured(makeLocation(10.0, 20.0, 30.0, date.time))
+
+        mdl.shutdown()
 
         verify(exactly = 1) { observer.onPointOfInterestUpdate(title = poiTitle, loc = any())}
     }
@@ -74,8 +78,10 @@ class RecorderPOITests {
         val date = Date.from(Instant.now())
         locReqCallback.captured(makeLocation(10.0, 20.0, 30.0, date.time))
 
+        mdl.shutdown()
+
         verify(exactly = 1) { repo.createRecording(recording = any()) }
-        verify(exactly = 1) { repo.addPointOfInterest(recId = 35, title = poiTitle, latitude = 10.0, longitude = 20.0) }
+        verify(exactly = 1) { repo.addPointOfInterest(recId = 35, title = poiTitle, longitude = 10.0, latitude = 20.0) }
     }
 
     private fun makeLocation(lon: Double, lat: Double, alt: Double, time: Long): Location {
