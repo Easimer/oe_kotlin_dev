@@ -4,6 +4,7 @@ import android.location.Location
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import net.easimer.surveyor.data.PointOfInterest
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.entities.Recording
 import java.util.*
@@ -18,6 +19,7 @@ class RecorderModel(
     private val ioThreadHandler : Handler
 
     private val track = LinkedList<net.easimer.surveyor.data.Location>()
+    private val markers = LinkedList<PointOfInterest>()
     private var recId: Long? = null
 
     private data class PendingPOIMarkRequest(
@@ -42,9 +44,14 @@ class RecorderModel(
         ioThread.join()
     }
 
-    fun requestFullLocationUpdate(callback: (locs: List<net.easimer.surveyor.data.Location>) -> Unit): Boolean {
+    fun requestFullLocationUpdate(observer: LocationUpdateObserver): Boolean {
         ioThreadHandler.post {
-            callback(track)
+            track.forEach {
+                observer.onLocationUpdate(it)
+            }
+            markers.forEach {
+                observer.onPointOfInterestUpdate(it.title, it.location)
+            }
         }
 
         return true
@@ -56,13 +63,15 @@ class RecorderModel(
         req?.run {
             Log.d(TAG, "serving POI req: $title")
 
+            markers.add(PointOfInterest(title, loc))
+
             ioThreadHandler.post {
                 if(recId == null) {
                     createRecording(loc.longitude, loc.latitude)
                 }
 
                 recId?.let { recId ->
-                    repo.addPointOfInterest(recId, title, loc.longitude, loc.latitude)
+                    repo.addPointOfInterest(recId, title, loc.longitude, loc.latitude, loc.altitude, Date(loc.time))
                 }
             }
 

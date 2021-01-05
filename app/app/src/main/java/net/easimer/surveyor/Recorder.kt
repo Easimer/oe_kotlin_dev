@@ -53,9 +53,9 @@ object Recorder {
     }
 
     @Synchronized
-    fun requestFullLocationUpdate(callback: (locs: List<Location>) -> Unit): Boolean {
+    fun requestFullLocationUpdate(observer: LocationUpdateObserver): Boolean {
         service?.run {
-            return requestFullLocationUpdate(callback)
+            return requestFullLocationUpdate(observer)
         }
         return false
     }

@@ -28,12 +28,14 @@ class RecorderPOITests {
     @Before
     fun before() {
         every { gpsClient.setCallback(callback = any()) } answers { Unit }
+        every { gpsClient.start() } answers { Unit }
+        every { gpsClient.shutdown() } answers { Unit }
         every { gpsClient.getCurrentLocationImmediately(callback = capture(locReqCallback)) } answers { Unit }
 
         every { observer.onLocationUpdate(loc = any()) } answers { Unit }
         every { observer.onPointOfInterestUpdate(title = any(), loc = any()) } answers { Unit }
 
-        every { repo.addPointOfInterest(recId = any(), title = any(), longitude = any(), latitude = any())} answers { Unit }
+        every { repo.addPointOfInterest(recId = any(), title = any(), longitude = any(), latitude = any(), altitude = any(), date = any())} answers { Unit }
         every { repo.createRecording(recording = any()) } returns 35
 
         Recorder.subscribeToLocationUpdates(observer)
@@ -81,7 +83,7 @@ class RecorderPOITests {
         mdl.shutdown()
 
         verify(exactly = 1) { repo.createRecording(recording = any()) }
-        verify(exactly = 1) { repo.addPointOfInterest(recId = 35, title = poiTitle, longitude = 10.0, latitude = 20.0) }
+        verify(exactly = 1) { repo.addPointOfInterest(recId = 35, title = poiTitle, longitude = 10.0, latitude = 20.0, altitude = 30.0, date = date) }
     }
 
     private fun makeLocation(lon: Double, lat: Double, alt: Double, time: Long): Location {

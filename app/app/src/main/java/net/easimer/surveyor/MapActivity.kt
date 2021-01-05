@@ -67,11 +67,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
 
                 trackPtSrc.subscribeToLocationUpdates(this)
                 trackPtSrc.start()
-                trackPtSrc.requestFullLocationUpdate {
-                    it.forEach {
-                        onLocationUpdate(it)
-                    }
-                }
+                trackPtSrc.requestFullLocationUpdate(this)
             },
             onDenied = {
                 Log.d(TAG, "User denies ext storage rw perm, finishing")
@@ -128,7 +124,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
 
     override fun onPointOfInterestUpdate(title: String, location: Location) {
         Log.d(TAG, "POIDialog callback: $title $location")
-        // TODO: mapView.appendPointOfInterest(it.latitude, it.longitude)
+        mapView.addPointOfInterest(title, location)
     }
 
     private fun showPOIDialog() {

@@ -3,10 +3,13 @@ package net.easimer.surveyor
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import net.easimer.surveyor.data.Location
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.MapTileProviderBasic
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -14,14 +17,17 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.CopyrightOverlay
+import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
+import java.util.*
 
 class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecordingMapView {
     private val TAG = "RecordingView"
     private val mapView = MapView(ctx)
     private val cfg = Configuration.getInstance()
     private val polylineOverlay = Polyline(mapView)
+    private val markers = LinkedList<Marker>()
 
     init {
         cfg.userAgentValue = "net.easimer.surveyor/0.0 Android osmdroid"
@@ -57,6 +63,16 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
 
     override fun appendPoint(latitude: Double, longitude: Double) {
         polylineOverlay.addPoint(GeoPoint(latitude, longitude))
+    }
+
+    override fun addPointOfInterest(title: String, location: Location) {
+        val marker = Marker(mapView)
+        marker.position = GeoPoint(location.latitude, location.longitude)
+        val icon = ContextCompat.getDrawable(context, R.drawable.center)
+        marker.icon = icon
+
+        mapView.overlays.add(marker)
+        markers.add(marker)
     }
 
     override fun saveState(p: Parcelable?): BaseSavedState? {

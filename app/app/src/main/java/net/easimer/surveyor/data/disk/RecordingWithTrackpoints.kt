@@ -2,6 +2,7 @@ package net.easimer.surveyor.data.disk
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import net.easimer.surveyor.data.disk.entities.PointOfInterest
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.disk.entities.Trackpoint
 
@@ -11,5 +12,11 @@ data class RecordingWithTrackpoints(
         parentColumn = "recId",
         entityColumn = "recId"
     )
-    val trackpoints: List<Trackpoint>
+    val trackpoints: List<Trackpoint>,
+
+    @Relation(
+        parentColumn = "recId",
+        entityColumn = "recId"
+    )
+    val pointsOfInterest: List<PointOfInterest>
 )

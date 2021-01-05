@@ -18,15 +18,15 @@ class LiveMapTrackpointSource(private val ctx: Context) : MapTrackpointSource {
         Recorder.unsubscribeFromLocationUpdates(observer)
     }
 
-    override fun requestFullLocationUpdate(callback: (locs: List<Location>) -> Unit) {
-        Recorder.requestFullLocationUpdate(callback)
-    }
-
     override fun canMarkPointOfInterest(): Boolean {
         return true
     }
 
     override fun markPointOfInterest(title: String) {
         Recorder.requestMarkPointOfInterest(title)
+    }
+
+    override fun requestFullLocationUpdate(observer: LocationUpdateObserver) {
+        Recorder.requestFullLocationUpdate(observer)
     }
 }

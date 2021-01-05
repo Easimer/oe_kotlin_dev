@@ -37,7 +37,7 @@ class RecordingRoomRepository(private val app: Application) : RecordingRepositor
         db.trackpoints().insertTrackpoint(Trackpoint(0, recId, longitude, latitude, altitude, date))
     }
 
-    override fun addPointOfInterest(recId: Long, title: String, longitude: Double, latitude: Double) {
-        db.pointsOfInterest().insertPoint(PointOfInterest(0, recId, title, longitude, latitude))
+    override fun addPointOfInterest(recId: Long, title: String, longitude: Double, latitude: Double, altitude: Double, date: Date) {
+        db.pointsOfInterest().insertPoint(PointOfInterest(0, recId, title, longitude, latitude, altitude, date))
     }
 }
