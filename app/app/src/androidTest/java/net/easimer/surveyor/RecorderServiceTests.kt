@@ -17,7 +17,7 @@ import java.util.*
 @RunWith(AndroidJUnit4::class)
 class RecorderServiceTests {
     @Test
-    fun serviceFiresEventsOnLocationUpdate() {
+    fun recorderModelCreatesRecordingOnGPSClientLocationCallback() {
         val callback = slot<(locations: List<Location>) -> Unit>()
         val gpsClient = mockk<IGPSClient>()
 
