@@ -22,8 +22,6 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         private val MAP_STATE = "MAP_STATE"
     }
 
-    private var nextRequestCode = 0
-    private var pendingRequests = HashMap<Int, Pair<() -> Unit, () -> Unit>>()
     private val TAG = "MapActivity"
     private lateinit var mapView: IRecordingMapView
     private lateinit var trackPtSrc: MapTrackpointSource
