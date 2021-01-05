@@ -48,9 +48,9 @@ class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
 
     private fun startLocationUpdates() {
         val req = LocationRequest.create()
-        req.priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+        req.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         req.interval = 15 * 1000
-        req.fastestInterval = 10 * 1000
+        req.fastestInterval = 5 * 1000
         req.smallestDisplacement = 0.0f
 
         try {

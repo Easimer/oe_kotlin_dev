@@ -2,6 +2,7 @@ package net.easimer.surveyor
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
@@ -42,12 +43,14 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         tilesOverlay.loadingBackgroundColor = Color.TRANSPARENT
         mapView.overlays.add(tilesOverlay)
 
+        polylineOverlay.color = Color.RED
+        polylineOverlay.width = 12.0f
         mapView.overlays.add(polylineOverlay)
     }
 
     override fun jumpTo(lat: Double, lon: Double) {
         val ctl = mapView.controller
-        ctl.setZoom(9.5)
+        ctl.setZoom(20.0)
         ctl.setCenter(GeoPoint(lat, lon))
     }
 
