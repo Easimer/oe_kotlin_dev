@@ -26,6 +26,8 @@ class RecordingRoomRepository(private val app: Application) : RecordingRepositor
     }
 
     override fun deleteRecording(recording: Recording) {
+        db.trackpoints().deleteTrackpoints(recording.recId)
+        db.pointsOfInterest().deletePointsOfInterest(recording.recId)
         db.recordings().deleteRecording(recording)
     }
 

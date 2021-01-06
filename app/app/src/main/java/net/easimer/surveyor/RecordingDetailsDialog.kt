@@ -34,6 +34,9 @@ class RecordingDetailsDialog(private val ctx: Context, private val rm: Recording
                     }
                     startActivity(intent)
                 }
+                .setNeutralButton(R.string.delete) { dialog, id ->
+                    rm.delete(rec)
+                }
 
             builder.create()
         } ?: throw IllegalStateException("")

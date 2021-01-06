@@ -7,4 +7,5 @@
     <string name="recording_title">Title</string>
     <string name="open_map">Open map</string>
     <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>

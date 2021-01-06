@@ -35,4 +35,10 @@ class MainScreenViewModel(
     override fun replay(rec: Recording) {
         activityStarter.startMapActivity(rec.recId)
     }
+
+    override fun delete(rec: Recording) {
+        ioThreadHandler.post {
+            repo.deleteRecording(rec)
+        }
+    }
 }
