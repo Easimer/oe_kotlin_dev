@@ -8,11 +8,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.fragment.app.DialogFragment
-import net.easimer.surveyor.data.disk.RecordingRoomRepository
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.databinding.LayoutRecordingDetailsBinding
 
-class RecordingDetailsDialog(private val ctx: Context, private val rm: RecordingManager, private val rec: Recording) : DialogFragment() {
+class RecordingDetailsDialog(private val ctx: Context, private val rm: IRecordingManager, private val rec: Recording) : DialogFragment() {
     protected val inflater = LayoutInflater.from(ctx)
     protected val binding = LayoutRecordingDetailsBinding.inflate(inflater)
 

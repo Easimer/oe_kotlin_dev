@@ -10,7 +10,7 @@ import net.easimer.surveyor.data.disk.entities.Recording
 class MainScreenViewModel(
     app: Application,
     private val repo: RecordingRepository,
-    private val activityStarter: IActivityStarter) : AndroidViewModel(app), RecordingManager {
+    private val activityStarter: IActivityStarter) : AndroidViewModel(app), IRecordingManager {
 
     private val ioThread = HandlerThread("UserIOThread")
     private val ioThreadHandler: Handler

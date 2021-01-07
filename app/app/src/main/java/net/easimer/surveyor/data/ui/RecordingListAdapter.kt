@@ -1,16 +1,12 @@
 package net.easimer.surveyor.data.ui
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import net.easimer.surveyor.R
-import net.easimer.surveyor.RecordingManager
+import net.easimer.surveyor.IRecordingManager
 import net.easimer.surveyor.data.disk.entities.Recording
 
-class RecordingListAdapter(private val ctx: Context, private val rm: RecordingManager)
+class RecordingListAdapter(private val ctx: Context, private val rm: IRecordingManager)
     : RecyclerView.Adapter<RecordingViewHolder>() {
     private var recordings: List<Recording>? = null
 

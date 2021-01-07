@@ -1,7 +1,6 @@
 package net.easimer.surveyor.data.ui
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import net.easimer.surveyor.*
 import net.easimer.surveyor.databinding.LayoutRecordingListItemBinding
 import net.easimer.surveyor.data.disk.entities.Recording
 
-class RecordingView(private val ctx: Context, private val rm: RecordingManager) : LinearLayout(ctx) {
+class RecordingView(private val ctx: Context, private val rm: IRecordingManager) : LinearLayout(ctx) {
     protected val inflater =
         ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     protected val binding = LayoutRecordingListItemBinding.inflate(inflater)
