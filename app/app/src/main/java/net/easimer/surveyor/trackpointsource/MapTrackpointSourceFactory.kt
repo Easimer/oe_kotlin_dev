@@ -6,11 +6,11 @@ import net.easimer.surveyor.data.RecordingRepository
 
 class MapTrackpointSourceFactory {
     companion object {
-        fun make(ctx: Context): MapTrackpointSource {
+        fun make(ctx: Context): IMapTrackpointSource {
             return LiveMapTrackpointSource(ctx)
         }
 
-        fun make(owner: LifecycleOwner, repo: RecordingRepository, recID: Long): MapTrackpointSource {
+        fun make(owner: LifecycleOwner, repo: RecordingRepository, recID: Long): IMapTrackpointSource {
             return ReplayMapTrackpointSource(owner, repo, recID)
         }
     }

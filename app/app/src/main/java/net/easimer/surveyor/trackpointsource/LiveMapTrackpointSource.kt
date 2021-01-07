@@ -3,9 +3,8 @@ package net.easimer.surveyor.trackpointsource
 import android.content.Context
 import net.easimer.surveyor.LocationUpdateObserver
 import net.easimer.surveyor.Recorder
-import net.easimer.surveyor.data.Location
 
-class LiveMapTrackpointSource(private val ctx: Context) : MapTrackpointSource {
+class LiveMapTrackpointSource(private val ctx: Context) : IMapTrackpointSource {
     override fun start() {
         Recorder.tryStartService(ctx)
     }

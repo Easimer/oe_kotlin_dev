@@ -6,13 +6,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.fragment.app.DialogFragment
-import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.databinding.LayoutPoiDialogBinding
-import net.easimer.surveyor.trackpointsource.MapTrackpointSource
+import net.easimer.surveyor.trackpointsource.IMapTrackpointSource
 
 class POIDialog(
     private val ctx: Context,
-    private val trackPtSrc: MapTrackpointSource) : DialogFragment() {
+    private val trackPtSrc: IMapTrackpointSource) : DialogFragment() {
     protected val inflater = LayoutInflater.from(ctx)
     protected val binding = LayoutPoiDialogBinding.inflate(inflater)
 

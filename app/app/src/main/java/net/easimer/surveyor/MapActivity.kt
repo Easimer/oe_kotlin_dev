@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
-import net.easimer.surveyor.trackpointsource.MapTrackpointSource
+import net.easimer.surveyor.trackpointsource.IMapTrackpointSource
 import net.easimer.surveyor.trackpointsource.MapTrackpointSourceFactory
 import java.util.*
 
@@ -26,7 +26,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
 
     private val TAG = "MapActivity"
     private lateinit var mapView: IRecordingMapView
-    private lateinit var trackPtSrc: MapTrackpointSource
+    private lateinit var trackPtSrc: IMapTrackpointSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
