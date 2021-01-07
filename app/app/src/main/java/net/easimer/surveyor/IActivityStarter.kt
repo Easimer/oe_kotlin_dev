@@ -3,7 +3,7 @@ package net.easimer.surveyor
 /**
  * An interface through which components may start specific types of activities.
  */
-interface ActivityStarter {
+interface IActivityStarter {
     /**
      * Starts a [MapActivity] activity that replays a specific recording.
      * @param recId Identifier of the recording to be played back.

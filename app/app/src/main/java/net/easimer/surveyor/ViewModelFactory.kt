@@ -8,7 +8,7 @@ import net.easimer.surveyor.data.RecordingRepository
 class ViewModelFactory(
     private val app: Application,
     private val repository: RecordingRepository,
-    private val activityStarter: ActivityStarter
+    private val activityStarter: IActivityStarter
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when(modelClass) {

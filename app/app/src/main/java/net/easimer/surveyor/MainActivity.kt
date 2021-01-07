@@ -23,7 +23,7 @@ class MainActivity : PermissionCheckedActivity() {
     }
     private lateinit var recyclerView : RecordingRecyclerView
     private lateinit var viewModel: MainScreenViewModel
-    private lateinit var activityStarter: ActivityStarter
+    private lateinit var activityStarter: IActivityStarter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         activityStarter = ActivityStarterAndroid(this)
@@ -98,7 +98,7 @@ class MainActivity : PermissionCheckedActivity() {
         }
     }
 
-    class ActivityStarterAndroid(private val ctx: Context) : ActivityStarter {
+    class ActivityStarterAndroid(private val ctx: Context) : IActivityStarter {
         override fun startMapActivity(recId: Long) {
             val intent = Intent(ctx, MapActivity::class.java).apply {
                 putExtra(MapActivity.KIND, MapActivity.KIND_STATIC)
