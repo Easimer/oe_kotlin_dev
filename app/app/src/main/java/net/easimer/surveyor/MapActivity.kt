@@ -3,11 +3,15 @@ package net.easimer.surveyor
 import android.Manifest
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.disk.RecordingRoomRepository
+import net.easimer.surveyor.graphs.StatisticsDialog
+import net.easimer.surveyor.graphs.StatisticsDialogModel
 import net.easimer.surveyor.trackpointsource.IMapTrackpointSource
 import net.easimer.surveyor.trackpointsource.MapTrackpointSourceFactory
 import java.util.*
@@ -24,9 +28,15 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         private val MAP_STATE = "MAP_STATE"
     }
 
+    private enum class Kind {
+        Static, Dynamic
+    }
+
     private val TAG = "MapActivity"
     private lateinit var mapView: IRecordingMapView
     private lateinit var trackPtSrc: IMapTrackpointSource
+    private lateinit var kind: Kind
+    private var recId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,15 +48,18 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
             val kind = getInt(KIND)
 
             return@run kind == KIND_DYNAMIC
-        } ?: false
+        }
 
         trackPtSrc = if (startService) {
+            kind = Kind.Dynamic
             MapTrackpointSourceFactory.make(this)
         } else {
+            kind = Kind.Static
             val repo = RecordingRoomRepository(application)
 
             intent!!.extras!!.let {
                 val recID = it.getLong(REC_ID)
+                this.recId = recID
                 MapTrackpointSourceFactory.make(this, repo, recID)
             }
         }
@@ -127,8 +140,37 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         mapView.addPointOfInterest(title, location)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        return when(kind) {
+            Kind.Static -> {
+                menuInflater.inflate(R.menu.menu_map, menu)
+                true
+            }
+            else -> false
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.menu_opt_stats -> {
+                showStatsDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun showPOIDialog() {
         val dlg = POIDialog(this, trackPtSrc)
         dlg.show(supportFragmentManager, "POITITLEDLG")
+    }
+
+    private fun showStatsDialog() {
+        recId?.let {
+            val repo = RecordingRoomRepository(application)
+            val mdl = StatisticsDialogModel(this, it, repo)
+            val dlg = StatisticsDialog(this, mdl)
+            dlg.show(supportFragmentManager, "STATSDLG")
+        } ?: throw IllegalStateException()
     }
 }

@@ -8,4 +8,8 @@
     <string name="open_map">Open map</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="statistics">Statistics</string>
+    <string name="ok">OK</string>
+    <string name="stat_lbl_avg_speed">Average speed</string>
+    <string name="stat_lbl_top_speed">Top speed:</string>
 </resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="model" type="net.easimer.surveyor.graphs.IStatisticsDialogModel"/>
+    </data>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/stat_lbl_avg_speed"
+                android:text="@string/stat_lbl_avg_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toTopOf="@id/stat_avg_speed"/>
+
+            <TextView
+                android:id="@+id/stat_avg_speed"
+                android:text="@{model.averageSpeed}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:layout_constraintTop_toBottomOf="@id/stat_lbl_avg_speed"
+                card_view:layout_constraintBottom_toTopOf="@id/stat_lbl_top_speed"/>
+
+            <TextView
+                android:id="@+id/stat_lbl_top_speed"
+                android:text="@string/stat_lbl_top_speed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:layout_constraintTop_toBottomOf="@id/stat_avg_speed"
+                card_view:layout_constraintBottom_toTopOf="@id/stat_top_speed"/>
+
+            <TextView
+                android:id="@+id/stat_top_speed"
+                android:text="@{model.topSpeed}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                card_view:layout_constraintTop_toBottomOf="@id/stat_lbl_top_speed"
+                card_view:layout_constraintBottom_toTopOf="@id/graph_speed"/>
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph_speed"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                card_view:layout_constraintTop_toBottomOf="@id/stat_top_speed"
+                card_view:layout_constraintBottom_toTopOf="@id/graph_altitude"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintRight_toRightOf="parent"/>
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/graph_altitude"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                card_view:layout_constraintTop_toBottomOf="@id/graph_speed"
+                card_view:layout_constraintLeft_toLeftOf="parent"
+                card_view:layout_constraintRight_toRightOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>
