@@ -12,4 +12,6 @@
     <string name="ok">OK</string>
     <string name="stat_lbl_avg_speed">Average speed</string>
     <string name="stat_lbl_top_speed">Top speed:</string>
+    <string name="speed_stats">Speed</string>
+    <string name="altitude_stats">Altitude</string>
 </resources>
