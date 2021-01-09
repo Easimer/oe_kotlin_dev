@@ -22,9 +22,17 @@ class StatisticsDialogModel(
             Observer<RecordingWithTrackpoints> { t ->
                 t?.let {
                     populateSpeedGraph(it)
+                    populateAltitudeGraph(it)
                 }
             }
         )
+    }
+
+    private fun populateAltitudeGraph(r: RecordingWithTrackpoints) {
+        val data = r.trackpoints.map {
+            Pair(it.date, it.altitude)
+        }
+        graphProvider.graphAltitude.addSeries(data)
     }
 
     private fun populateSpeedGraph(r: RecordingWithTrackpoints) {

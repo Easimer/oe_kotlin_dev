@@ -9,13 +9,10 @@ import android.view.View
 import androidx.fragment.app.DialogFragment
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import net.easimer.surveyor.R
 import net.easimer.surveyor.databinding.LayoutStatsDialogBinding
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.random.Random
 
 class StatisticsDialog(
     private val ctx: Context,
