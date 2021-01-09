@@ -45,9 +45,20 @@ class MainActivity : PermissionCheckedActivity() {
         val recyclerViewElem = findViewById<RecyclerView>(R.id.main_list)
         recyclerView = RecordingRecyclerView.createRecyclerView(this, recyclerViewElem, viewModel)
 
+        observeRecordings()
+    }
+
+    private fun observeRecordings() {
+        // BUG: the list of recordings won't update after starting a new recording
+        // I believe that this happens because this activity is paused when the users starts a new
+        // recording and in that state it won't receive any updates. This would be fine, but
+        // the list doesn't get updated even after the activity is resumed. The user has to either
+        // delete or rename an old recording to trigger the refresh.
+        viewModel.recordings.removeObservers(this)
         viewModel.recordings.observe(this, object : Observer<List<Recording>> {
             override fun onChanged(t: List<Recording>?) {
                 t?.let {
+                    Log.d(TAG, "Setting recordings: ${it}")
                     recyclerView.viewAdapter.setRecordings(it)
                 }
             }
