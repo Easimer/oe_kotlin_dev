@@ -19,7 +19,7 @@ import kotlin.random.Random
 
 class StatisticsDialog(
     private val ctx: Context,
-    private val model: StatisticsDialogModel
+    private val model: IStatisticsDialogModel
     ) : DialogFragment(), IGraphProvider {
     protected val inflater = LayoutInflater.from(ctx)
     protected val binding = LayoutStatsDialogBinding.inflate(inflater)
@@ -28,6 +28,7 @@ class StatisticsDialog(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding.model = model
+        binding.lifecycleOwner = this
         val dlg = activity?.let {
             val builder = AlertDialog.Builder(it)
 

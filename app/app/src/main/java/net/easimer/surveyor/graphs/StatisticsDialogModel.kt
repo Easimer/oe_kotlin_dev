@@ -2,6 +2,7 @@ package net.easimer.surveyor.graphs
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.RecordingWithTrackpoints
@@ -42,7 +43,7 @@ class StatisticsDialogModel(
             val maxSpeed = maxSpeedSeg.second
 
             val topSpeedKmh = maxSpeed / 1000.0 * 3600.0
-            this.topSpeed = "${topSpeedKmh} km/h" // TODO: localization
+            this.topSpeed.value = "${topSpeedKmh} km/h" // TODO: localization
         }
     }
 
@@ -53,7 +54,7 @@ class StatisticsDialogModel(
 
         val avgSpeed = sum.first / sum.second
         val avgSpeedKmh = avgSpeed / 1000.0 * 3600.0
-        this.averageSpeed = "${avgSpeedKmh} km/h" // TODO: localization
+        this.averageSpeed.value = "${avgSpeedKmh} km/h" // TODO: localization
     }
 
     private fun <E, R> List<E>.forEachPairInto(ret: MutableList<R>, pred: (lhs: E, rhs: E) -> R) {
@@ -65,6 +66,6 @@ class StatisticsDialogModel(
         }
     }
 
-    override var topSpeed: String = "..."
-    override var averageSpeed: String = "..."
+    override var topSpeed: MutableLiveData<String> = MutableLiveData("...")
+    override var averageSpeed: MutableLiveData<String> = MutableLiveData("...")
 }
