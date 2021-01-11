@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.disk.entities.Trackpoint
+import java.util.*
 
 @Dao
 interface Recordings {
@@ -22,4 +23,7 @@ interface Recordings {
 
     @Update
     fun updateRecording(recording: Recording)
+
+    @Query("UPDATE recording SET endDate = :date WHERE recId = :recId")
+    fun setEndDate(recId: Long, date: Date)
 }

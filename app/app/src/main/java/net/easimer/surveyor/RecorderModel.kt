@@ -7,6 +7,7 @@ import android.util.Log
 import net.easimer.surveyor.data.PointOfInterest
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.entities.Recording
+import java.time.Instant
 import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -39,6 +40,12 @@ class RecorderModel(
     }
 
     fun shutdown() {
+        recId?.let { recId ->
+            ioThreadHandler.post {
+                repo.setEndDate(recId, Date())
+            }
+        }
+
         ioThread.quitSafely()
         gpsClient.shutdown()
         ioThread.join()

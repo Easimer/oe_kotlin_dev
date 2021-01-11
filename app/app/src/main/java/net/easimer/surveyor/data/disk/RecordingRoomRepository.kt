@@ -42,4 +42,8 @@ class RecordingRoomRepository(private val app: Application) : RecordingRepositor
     override fun addPointOfInterest(recId: Long, title: String, longitude: Double, latitude: Double, altitude: Double, date: Date) {
         db.pointsOfInterest().insertPoint(PointOfInterest(0, recId, title, longitude, latitude, altitude, date))
     }
+
+    override fun setEndDate(recId: Long, date: Date) {
+        db.recordings().setEndDate(recId, date)
+    }
 }

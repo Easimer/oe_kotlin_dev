@@ -19,4 +19,6 @@ interface RecordingRepository {
     fun appendTrackpoint(recId: Long, longitude: Double, latitude: Double, altitude: Double, date: Date)
 
     fun addPointOfInterest(recId: Long, title: String, longitude: Double, latitude: Double, altitude: Double, date: Date)
+
+    fun setEndDate(recId: Long, date: Date)
 }
