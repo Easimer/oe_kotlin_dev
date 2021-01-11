@@ -8,6 +8,6 @@ interface IRecordingGPXAdapter {
     val name: String
     val time: Date
 
-    fun forEachTrackpoint(callback: (trackpoint: Trackpoint) -> Unit)
-    fun forEachPointOfInterest(callback: (poi: PointOfInterest) -> Unit)
+    val trackpoints: List<Trackpoint>
+    val pointsOfInterest: List<PointOfInterest>
 }

@@ -12,15 +12,9 @@ class RecordingGPXAdapter(private val r: RecordingWithTrackpoints) : IRecordingG
     override val time: Date
         get() = r.recording.startDate
 
-    override fun forEachTrackpoint(callback: (trackpoint: Trackpoint) -> Unit) {
-        r.trackpoints.forEach {
-            callback(it)
-        }
-    }
+    override val trackpoints: List<Trackpoint>
+        get() = r.trackpoints
 
-    override fun forEachPointOfInterest(callback: (poi: PointOfInterest) -> Unit) {
-        r.pointsOfInterest.forEach {
-            callback(it)
-        }
-    }
+    override val pointsOfInterest: List<PointOfInterest>
+        get() = r.pointsOfInterest
 }

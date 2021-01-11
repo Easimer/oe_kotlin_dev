@@ -17,8 +17,10 @@ class TestGPXGenerator {
             override val time: Date
                 get() = Date.from(Instant.now())
 
-            override fun forEachTrackpoint(callback: (trackpoint: Trackpoint) -> Unit) {}
-            override fun forEachPointOfInterest(callback: (poi: PointOfInterest) -> Unit) {}
+            override val trackpoints: List<Trackpoint>
+                get() = listOf()
+            override val pointsOfInterest: List<PointOfInterest>
+                get() = listOf()
         }
 
         return Pair(GPXSerializer(rec).makeDocument(), rec)
@@ -31,16 +33,16 @@ class TestGPXGenerator {
             override val time: Date
                 get() = Date.from(Instant.now())
 
-            override fun forEachTrackpoint(callback: (trackpoint: Trackpoint) -> Unit) {
-                arrayOf(
-                    Trackpoint(1, 1, 10.0, 20.0, 30.0, Date.from(Instant.now())),
-                    Trackpoint(2, 1, 11.0, 20.0, 30.0, Date.from(Instant.now())),
-                    Trackpoint(3, 1, 12.0, 20.0, 30.0, Date.from(Instant.now()))
-                ).forEach {
-                    callback(it)
-                }
-            }
-            override fun forEachPointOfInterest(callback: (poi: PointOfInterest) -> Unit) {}
+            override val trackpoints: List<Trackpoint>
+                get() = dataTrack
+            override val pointsOfInterest: List<PointOfInterest>
+                get() = listOf()
+
+            private val dataTrack = listOf(
+                Trackpoint(1, 1, 10.0, 20.0, 30.0, Date.from(Instant.now())),
+                Trackpoint(2, 1, 11.0, 20.0, 30.0, Date.from(Instant.now())),
+                Trackpoint(3, 1, 12.0, 20.0, 30.0, Date.from(Instant.now()))
+            )
         }
 
         return Pair(GPXSerializer(rec).makeDocument(), rec)
@@ -53,16 +55,16 @@ class TestGPXGenerator {
             override val time: Date
                 get() = Date.from(Instant.now())
 
-            override fun forEachTrackpoint(callback: (trackpoint: Trackpoint) -> Unit) {}
-            override fun forEachPointOfInterest(callback: (poi: PointOfInterest) -> Unit) {
-                arrayOf(
-                    PointOfInterest(1, 1, "POI1", 10.0, 20.0, 30.0, Date.from(Instant.now())),
-                    PointOfInterest(2, 1, "POI2", 11.0, 20.0, 30.0, Date.from(Instant.now())),
-                    PointOfInterest(3, 1, "POI3", 12.0, 20.0, 30.0, Date.from(Instant.now()))
-                ).forEach {
-                    callback(it)
-                }
-            }
+            override val trackpoints: List<Trackpoint>
+                get() = listOf()
+            override val pointsOfInterest: List<PointOfInterest>
+                get() = dataPOI
+
+            private val dataPOI = listOf(
+                PointOfInterest(1, 1, "POI1", 10.0, 20.0, 30.0, Date.from(Instant.now())),
+                PointOfInterest(2, 1, "POI2", 11.0, 20.0, 30.0, Date.from(Instant.now())),
+                PointOfInterest(3, 1, "POI3", 12.0, 20.0, 30.0, Date.from(Instant.now()))
+            )
         }
 
         return Pair(GPXSerializer(rec).makeDocument(), rec)

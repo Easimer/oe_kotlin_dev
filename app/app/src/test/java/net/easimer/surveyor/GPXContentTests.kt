@@ -56,11 +56,24 @@ class GPXContentTests {
 
         trackpointElements.forEach {
             assertWptElement(it, ns)
+            assertTrue(wptElementFoundInTrackpoints(it, rec, ns))
         }
+    }
 
-        assertTrue(trackpointElements.all {
-            wptElementFoundInRecording(it, rec, ns)
-        })
+    @Test
+    fun waypointsOnlyDocumentHasWaypoints() {
+        val (doc, rec) = docGen.makeTrackpointsOnlyDocument()
+        val rootElement = assertRootElement(doc)
+        val ns = rootElement.namespace
+
+        val waypointElements = rootElement.getChildren("wpt", ns)
+        assertNotNull(waypointElements)
+        assertEquals(waypointElements.size, rec.pointsOfInterest.size)
+
+        waypointElements.forEach {
+            assertWptElement(it, ns)
+            assertTrue(wptElementFoundInPOIs(it, rec, ns))
+        }
     }
 
     private fun assertRootElement(doc: Document): Element {
@@ -79,21 +92,29 @@ class GPXContentTests {
         assertNotNull(elem.getChild("time", ns))
     }
 
-    private fun wptElementFoundInRecording(wpt: Element, rec: IRecordingGPXAdapter, ns: Namespace): Boolean {
+    private fun wptElementFoundInTrackpoints(wpt: Element, rec: IRecordingGPXAdapter, ns: Namespace): Boolean {
         val lat = wpt.getAttributeValue("lat").toDouble()
         val lon = wpt.getAttributeValue("lon").toDouble()
         val time = wpt.getChild("time", ns)
-        var flag = false
 
-        rec.forEachTrackpoint {
+        return rec.trackpoints.any {
             val latMatches = lat.compareTo(it.latitude) == 0
             val lonMatches = lon.compareTo(it.longitude) == 0
             val timeMatches = time.text == dateFmt.format(it.date)
-            if(latMatches && lonMatches && timeMatches) {
-                flag = true
-            }
+            (latMatches && lonMatches && timeMatches)
         }
+    }
 
-        return flag
+    private fun wptElementFoundInPOIs(wpt: Element, rec: IRecordingGPXAdapter, ns: Namespace): Boolean {
+        val lat = wpt.getAttributeValue("lat").toDouble()
+        val lon = wpt.getAttributeValue("lon").toDouble()
+        val time = wpt.getChild("time", ns)
+
+        return rec.pointsOfInterest.any {
+            val latMatches = lat.compareTo(it.latitude) == 0
+            val lonMatches = lon.compareTo(it.longitude) == 0
+            val timeMatches = time.text == dateFmt.format(it.date)
+            (latMatches && lonMatches && timeMatches)
+        }
     }
 }
