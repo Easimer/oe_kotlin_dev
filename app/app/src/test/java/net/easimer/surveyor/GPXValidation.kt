@@ -27,19 +27,7 @@ class GPXValidation(
         spf.isNamespaceAware = true
 
         val xmlReader = spf.newSAXParser().xmlReader
-        xmlReader.errorHandler = object : ErrorHandler {
-            override fun warning(p0: SAXParseException?) {
-                p0?.let { throw p0 }
-            }
-
-            override fun error(p0: SAXParseException?) {
-                p0?.let { throw p0 }
-            }
-
-            override fun fatalError(p0: SAXParseException?) {
-                p0?.let { throw p0 }
-            }
-        }
+        xmlReader.errorHandler = errorHandler
         xmlReader.parse(InputSource(input))
     }
 }
