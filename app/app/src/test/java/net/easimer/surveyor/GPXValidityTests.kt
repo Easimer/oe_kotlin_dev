@@ -14,18 +14,20 @@ class GPXValidityTests {
 
     @Test
     fun trackpointsOnlyValidation() {
-
+        val (doc, _) = docGen.makeTrackpointsOnlyDocument()
+        serializeAndValidate(doc)
     }
 
     @Test
     fun emptyValidation() {
-        val doc = docGen.makeEmptyDocument()
+        val (doc, _) = docGen.makeEmptyDocument()
         serializeAndValidate(doc)
     }
 
     @Test
     fun waypointsOnlyValidation() {
-
+        val (doc, _) = docGen.makeWaypointsOnlyDocument()
+        serializeAndValidate(doc)
     }
 
     private fun serializeAndValidate(doc: Document) {
