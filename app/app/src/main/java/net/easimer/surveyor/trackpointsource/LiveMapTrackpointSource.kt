@@ -3,6 +3,7 @@ package net.easimer.surveyor.trackpointsource
 import android.content.Context
 import net.easimer.surveyor.LocationUpdateObserver
 import net.easimer.surveyor.Recorder
+import java.io.OutputStream
 
 class LiveMapTrackpointSource(private val ctx: Context) : IMapTrackpointSource {
     override fun start() {
@@ -27,5 +28,8 @@ class LiveMapTrackpointSource(private val ctx: Context) : IMapTrackpointSource {
 
     override fun requestFullLocationUpdate(observer: LocationUpdateObserver) {
         Recorder.requestFullLocationUpdate(observer)
+    }
+
+    override fun exportToGPX(stream: OutputStream) {
     }
 }

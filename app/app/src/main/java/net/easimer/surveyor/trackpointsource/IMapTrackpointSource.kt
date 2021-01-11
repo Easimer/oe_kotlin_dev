@@ -1,7 +1,7 @@
 package net.easimer.surveyor.trackpointsource
 
 import net.easimer.surveyor.LocationUpdateObserver
-import net.easimer.surveyor.data.Location
+import java.io.OutputStream
 
 interface IMapTrackpointSource {
     fun start()
@@ -11,4 +11,6 @@ interface IMapTrackpointSource {
 
     fun canMarkPointOfInterest(): Boolean
     fun markPointOfInterest(title: String)
+
+    fun exportToGPX(stream: OutputStream)
 }

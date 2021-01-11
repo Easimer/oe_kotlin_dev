@@ -13,7 +13,7 @@ import java.util.*
 class GPXSerializer(
     private val adapter: IRecordingGPXAdapter
 ) {
-    private val ns = Namespace.getNamespace("g", "http://www.topografix.com/GPX/1/1")
+    private val ns = Namespace.getNamespace("http://www.topografix.com/GPX/1/1")
     private val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
     fun makeDocumentAndSerialize(output: Writer) {

@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
  */
 open class PermissionCheckedActivity : AppCompatActivity() {
     private val permCallbacks = HashMap<Int, (granted: List<String>) -> Unit>()
-    private val intentCallbacks = HashMap<Int, () -> Unit>()
+    private val intentCallbacks = HashMap<Int, (requestCode: Int, data: Intent?) -> Unit>()
     private var nextRequestCode = 0
 
     /**
@@ -49,10 +49,19 @@ open class PermissionCheckedActivity : AppCompatActivity() {
      * @param activity Identifier of the activity
      * @param callback Callback
      */
-    fun startActivityForResult(activity : String, callback: () -> Unit) {
+    fun startActivityForResult(activity : String, callback: (requestCode: Int, data: Intent?) -> Unit) {
+        startActivityForResult(Intent(activity), callback)
+    }
+
+    /**
+     * Start an activity and call back when it's result arrives.
+     * @param intent Intent
+     * @param callback Callback
+     */
+    fun startActivityForResult(intent: Intent, callback: (requestCode: Int, data: Intent?) -> Unit) {
         val requestCode = getNextRequestCode()
         intentCallbacks[requestCode] = callback
-        startActivityForResult(Intent(activity), requestCode)
+        startActivityForResult(intent, requestCode)
     }
 
     @CallSuper
@@ -79,8 +88,10 @@ open class PermissionCheckedActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        intentCallbacks.get(requestCode)?.let {
-            it()
+        val handler = intentCallbacks.get(requestCode)
+
+        if(handler != null) {
+            handler(resultCode, data)
             intentCallbacks.remove(requestCode)
         }
     }

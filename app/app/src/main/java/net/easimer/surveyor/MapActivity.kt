@@ -3,6 +3,7 @@ package net.easimer.surveyor
 import android.Manifest
 import android.app.Application
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -104,6 +105,7 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
 
     private fun makeMapView(mapContainer: LinearLayout) {
         val mapView = RecordingMapView(this)
+        mapView.id = R.id.map_view
         this.mapView = mapView
         mapContainer.addView(mapView)
     }
@@ -117,20 +119,6 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
                 onDenied()
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        try {
-            val state = mapView.saveState(outState)
-            outState.putParcelable(MAP_STATE, state)
-        } catch (ex: Exception) {
-            Log.d(TAG, "Exception: $ex")
-        }
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        mapView.restoreState(MAP_STATE, savedInstanceState)
     }
 
     override fun onLocationUpdate(loc: Location) {
@@ -163,6 +151,10 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
                 showStatsDialog()
                 true
             }
+            R.id.menu_opt_gpx_export -> {
+                exportToGPX()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -179,6 +171,37 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
             val dlg = StatisticsDialog(this, mdl)
             dlg.show(supportFragmentManager, "STATSDLG")
         } ?: throw IllegalStateException()
+    }
+
+    private fun exportToGPX() {
+        checkRwPermissions(onGranted = {
+            Log.d(TAG, "R/W perms granted, starting export intent")
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.setType("application/gpx+xml")
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            intent.putExtra(Intent.EXTRA_TITLE, "recording.gpx")
+            startActivityForResult(intent) { resultCode, data ->
+                if(resultCode != RESULT_OK) {
+                    Log.d(TAG, "GPX export failed: resultCode is not OK: ${resultCode}")
+                    return@startActivityForResult
+                }
+                if(data != null) {
+                    val uri = data.data
+                    if(uri != null) {
+                        val stream = contentResolver.openOutputStream(uri)
+                        if(stream != null) {
+                            trackPtSrc.exportToGPX(stream)
+                        }
+                    } else {
+                        Log.d(TAG, "GPX export failed: uri was null")
+                    }
+                } else {
+                    Log.d(TAG, "GPX export failed: data was null")
+                }
+            }
+        }, onDenied = {
+            Log.d(TAG, "R/W perms denied by user while trying to export to GPX")
+        })
     }
 
     protected class FragmentFactory(
