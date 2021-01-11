@@ -15,15 +15,18 @@ class GPXSerializer(
     private val ns = Namespace.getNamespace("g", "http://www.topografix.com/GPX/1/1")
     private val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
-    fun serialize(output: Writer) {
+    fun makeDocumentAndSerialize(output: Writer) {
         val doc = makeDocument()
+        serialize(doc, output)
+    }
 
+    fun serialize(doc: Document, output: Writer) {
         val outter = XMLOutputter()
         outter.format = Format.getPrettyFormat()
         outter.output(doc, output)
     }
 
-    private fun makeDocument(): Document {
+    fun makeDocument(): Document {
         val result = Document()
         val root = makeElement("gpx")
         root.run {
