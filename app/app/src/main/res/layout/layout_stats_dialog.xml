@@ -12,6 +12,56 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/stat_lbl_general"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/general_stats"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                card_view:layout_constraintTop_toTopOf="parent"
+                card_view:layout_constraintBottom_toTopOf="@id/stat_subsection_total_distance"
+                />
+            <LinearLayout
+                android:id="@+id/stat_subsection_total_distance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                card_view:layout_constraintTop_toBottomOf="@id/stat_lbl_general"
+                card_view:layout_constraintBottom_toTopOf="@id/stat_subsection_time_taken"
+                >
+                <TextView
+                    android:text="@string/stat_lbl_total_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/stat_total_distance"
+                    android:text="@{model.totalDistance}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/stat_subsection_time_taken"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                card_view:layout_constraintTop_toBottomOf="@id/stat_subsection_total_distance"
+                card_view:layout_constraintBottom_toTopOf="@id/stat_lbl_speed"
+                >
+                <TextView
+                    android:text="@string/stat_lbl_time_taken"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <TextView
+                    android:id="@+id/stat_time_taken"
+                    android:text="@{model.timeTaken}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/stat_lbl_speed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

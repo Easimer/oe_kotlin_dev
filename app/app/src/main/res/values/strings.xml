@@ -15,4 +15,7 @@
     <string name="speed_stats">Speed</string>
     <string name="altitude_stats">Altitude</string>
     <string name="export_to_gpx">Export to GPX</string>
+    <string name="general_stats">General</string>
+    <string name="stat_lbl_total_distance">Total distance</string>
+    <string name="stat_lbl_time_taken">Time taken</string>
 </resources>
