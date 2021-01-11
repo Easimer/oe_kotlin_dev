@@ -40,7 +40,7 @@ class StatisticsDialogModel(
             val totalHours = totalMinutes / 60.0
 
             val hours = totalHours.toInt()
-            val minutes = totalMinutes - 60 * hours
+            val minutes = (totalMinutes - 60 * hours).toInt()
             timeTaken.value = "${hours} hours, ${minutes} minutes" // TODO: localization
         } else {
             timeTaken.value = "<ongoing recording>"
@@ -57,9 +57,11 @@ class StatisticsDialogModel(
     private fun populateSpeedGraph(r: RecordingWithTrackpoints) {
         val distAndElapsed = generateDateDistanceAndElapsedTimeList(r)
 
-        totalDistance.value = distAndElapsed.sumByDouble {
+        val totalDistanceMeters = distAndElapsed.sumByDouble {
             it.distance
-        }.toString()
+        }
+        val totalDistanceKilometers = String.format("%.2f", totalDistanceMeters / 1000.0)
+        totalDistance.value = "${totalDistanceKilometers} km"
 
         val speed = generateDateSpeedList(distAndElapsed)
         calculateAverageSpeed(distAndElapsed)
@@ -74,7 +76,7 @@ class StatisticsDialogModel(
         maxSpeedSeg?.let {
             val maxSpeed = maxSpeedSeg.second
 
-            val topSpeedKmh = maxSpeed / 1000.0 * 3600.0
+            val topSpeedKmh = String.format("%.2f", maxSpeed / 1000.0 * 3600.0)
             this.topSpeed.value = "${topSpeedKmh} km/h" // TODO: localization
         }
     }
@@ -85,7 +87,7 @@ class StatisticsDialogModel(
         }
 
         val avgSpeed = sum.first / sum.second
-        val avgSpeedKmh = avgSpeed / 1000.0 * 3600.0
+        val avgSpeedKmh = String.format("%.2f", avgSpeed / 1000.0 * 3600.0)
         this.averageSpeed.value = "${avgSpeedKmh} km/h" // TODO: localization
     }
 
