@@ -21,11 +21,30 @@ class StatisticsDialogModel(
         repo.getRecordingTrackpoints(recId).observe(lifecycleOwner,
             Observer<RecordingWithTrackpoints> { t ->
                 t?.let {
+                    calculateTimeTaken(it)
                     populateSpeedGraph(it)
                     populateAltitudeGraph(it)
                 }
             }
         )
+    }
+
+    private fun calculateTimeTaken(it: RecordingWithTrackpoints) {
+        val startDate = it.recording.startDate
+        val endDate = it.recording.endDate
+
+        if(endDate != null) {
+            val totalMillis = endDate.time - startDate.time
+            val totalSeconds = totalMillis / 1000.0
+            val totalMinutes = totalSeconds / 60.0
+            val totalHours = totalMinutes / 60.0
+
+            val hours = totalHours.toInt()
+            val minutes = totalMinutes - 60 * hours
+            timeTaken.value = "${hours} hours, ${minutes} minutes" // TODO: localization
+        } else {
+            timeTaken.value = "<ongoing recording>"
+        }
     }
 
     private fun populateAltitudeGraph(r: RecordingWithTrackpoints) {
@@ -37,6 +56,11 @@ class StatisticsDialogModel(
 
     private fun populateSpeedGraph(r: RecordingWithTrackpoints) {
         val distAndElapsed = generateDateDistanceAndElapsedTimeList(r)
+
+        totalDistance.value = distAndElapsed.sumByDouble {
+            it.distance
+        }.toString()
+
         val speed = generateDateSpeedList(distAndElapsed)
         calculateAverageSpeed(distAndElapsed)
         calculateTopSpeed(speed)
@@ -76,4 +100,6 @@ class StatisticsDialogModel(
 
     override var topSpeed: MutableLiveData<String> = MutableLiveData("...")
     override var averageSpeed: MutableLiveData<String> = MutableLiveData("...")
+    override val totalDistance: MutableLiveData<String> = MutableLiveData("...")
+    override val timeTaken: MutableLiveData<String> = MutableLiveData("...")
 }
