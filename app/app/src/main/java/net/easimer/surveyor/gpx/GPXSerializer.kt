@@ -43,7 +43,7 @@ class GPXSerializer(
      * Generates the document from the recording.
      * @return The document.
      */
-    private fun makeDocument(): Document {
+    fun makeDocument(): Document {
         val result = Document()
         val root = makeElement("gpx")
         root.run {
