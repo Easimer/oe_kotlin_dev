@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'org.jetbrains.dokka'
 
 android {
     compileSdkVersion 30
@@ -74,4 +75,19 @@ dependencies {
 
     // Testing
     androidTestImplementation "androidx.arch.core:core-testing:$rootProject.coreTestingVersion"
+}
+
+dokkaHtml.configure {
+    dokkaSourceSets {
+        named("main") {
+            noAndroidSdkLink.set(false)
+
+            sourceLink {
+                localDirectory.set(file("src/main/java"))
+                remoteUrl.set(URL("https://github.com/Easimer/oe_kotlin_dev/tree/master/app/app/src/main/java/"
+                ))
+                remoteLineSuffix.set("#L")
+            }
+        }
+    }
 }
