@@ -14,6 +14,12 @@ import net.easimer.surveyor.gpx.IRecordingGPXAdapter
 import java.io.OutputStream
 import java.util.*
 
+/**
+ * Trackpoint source for past recordings.
+ * @param owner Usually the Activity containing the map widget
+ * @param repo Repository
+ * @param recID Identifier of the current recording
+ */
 class ReplayMapTrackpointSource(private val owner: LifecycleOwner, private val repo: RecordingRepository, private val recID: Long) :
     IMapTrackpointSource {
     override fun start() {

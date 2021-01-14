@@ -8,6 +8,10 @@ import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.RecordingWithTrackpoints
 import java.util.*
 
+/**
+ * Model of the stats dialog.
+ * Fills the graphs with data.
+ */
 class StatisticsDialogModel(
     private val lifecycleOwner: LifecycleOwner,
     private val recId: Long,

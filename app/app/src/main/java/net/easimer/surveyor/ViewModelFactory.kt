@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import net.easimer.surveyor.data.RecordingRepository
 
+/**
+ * The view model factory used to recreate stuff like [MainScreenViewModel].
+ */
 class ViewModelFactory(
     private val app: Application,
     private val repository: RecordingRepository,

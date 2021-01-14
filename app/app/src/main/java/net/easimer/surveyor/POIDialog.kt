@@ -9,6 +9,11 @@ import androidx.fragment.app.DialogFragment
 import net.easimer.surveyor.databinding.LayoutPoiDialogBinding
 import net.easimer.surveyor.trackpointsource.IMapTrackpointSource
 
+/**
+ * Point-of-interest creation dialog.
+ *
+ * Asks the user for the label of the marker.
+ */
 class POIDialog(
     private val ctx: Context,
     private val trackPtSrc: IMapTrackpointSource) : DialogFragment() {

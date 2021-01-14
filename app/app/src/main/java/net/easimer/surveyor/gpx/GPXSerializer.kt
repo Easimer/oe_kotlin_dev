@@ -10,24 +10,40 @@ import java.io.Writer
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Turns a recording into a GPX document.
+ */
 class GPXSerializer(
     private val adapter: IRecordingGPXAdapter
 ) {
     private val ns = Namespace.getNamespace("http://www.topografix.com/GPX/1/1")
     private val dateFmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
 
+    /**
+     * Generates the document and immediately writes it to the output.
+     * @param output Output writer
+     */
     fun makeDocumentAndSerialize(output: Writer) {
         val doc = makeDocument()
         serialize(doc, output)
     }
 
-    fun serialize(doc: Document, output: Writer) {
+    /**
+     * Turns a document into XML and writes it to the output.
+     * @param doc Document
+     * @param output Output writer
+     */
+    private fun serialize(doc: Document, output: Writer) {
         val outter = XMLOutputter()
         outter.format = Format.getPrettyFormat()
         outter.output(doc, output)
     }
 
-    fun makeDocument(): Document {
+    /**
+     * Generates the document from the recording.
+     * @return The document.
+     */
+    private fun makeDocument(): Document {
         val result = Document()
         val root = makeElement("gpx")
         root.run {
@@ -44,6 +60,10 @@ class GPXSerializer(
         return result
     }
 
+    /**
+     * Turns the list of trackpoints into a <trk> element and appends it to the root.
+     * @param root The element to append the <trk> element to.
+     */
     private fun addTrack(root: Element) {
         val trackElement = Element("trk", ns)
         val trackSegElement = Element("trkseg", ns)
@@ -56,12 +76,24 @@ class GPXSerializer(
         root.addContent(trackElement)
     }
 
+    /**
+     * Turns the list of waypoints into <wpt> elements and appends them to the root.
+     * @param root The element to append the <wpt> elements to.
+     */
     private fun addWaypoints(root: Element) {
         adapter.pointsOfInterest.sortedBy { it.date }.forEach {
             appendWaypointTo(root, "wpt", it.latitude, it.longitude, it.date)
         }
     }
 
+    /**
+     * Builds a waypoint-type XML element and appends it to the root.
+     * @param root The element to append the created element to.
+     * @param name Name of the waypoint
+     * @param lat Latitude of the waypoint
+     * @param lon Longitude of the waypoint
+     * @param time Date of the waypoint
+     */
     private fun appendWaypointTo(root: Element, name: String, lat: Double, lon: Double, time: Date) {
         val elem = Element(name, ns)
         elem.attributes.run {
@@ -75,6 +107,10 @@ class GPXSerializer(
         root.addContent(elem)
     }
 
+    /**
+     * Generates a <metadata> element and appends it to the root.
+     * @param root The element to append the created element to.
+     */
     private fun addMetadata(root: Element) {
         makeElement("metadata").let { metadata ->
             makeElement("name").run {
@@ -91,6 +127,8 @@ class GPXSerializer(
 
     /**
      * Make an XML element in the GPX namespace.
+     * @param name Name of the element
+     * @return The created element
      */
     private fun makeElement(name: String): Element {
         val ret = Element(name)

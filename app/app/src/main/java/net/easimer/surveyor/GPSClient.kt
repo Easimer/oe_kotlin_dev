@@ -9,6 +9,10 @@ import com.google.android.gms.location.*
 import java.lang.IllegalStateException
 import java.security.Security
 
+/**
+ * An implementation of [IGPSClient] that uses the Google Location Services library.
+ * @param ctx Context (usually a [RecorderService] instance).
+ */
 class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
     private val TAG = "GPSClient"
     private val gpsThread = HandlerThread("ServiceGPSThread")

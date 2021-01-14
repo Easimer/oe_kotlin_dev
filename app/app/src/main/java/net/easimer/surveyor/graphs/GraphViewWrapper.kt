@@ -5,6 +5,9 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import java.util.*
 
+/**
+ * Wrapper for a graph UI widget.
+ */
 class GraphViewWrapper(private val view: GraphView) : IGraph {
     override fun addSeries(data: List<Pair<Date, Double>>) {
         val series = LineGraphSeries(data.map { DataPoint(it.first, it.second) }.toTypedArray())

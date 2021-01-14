@@ -7,6 +7,10 @@ import androidx.lifecycle.AndroidViewModel
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.entities.Recording
 
+/**
+ * View model of [MainActivity]. Acts as an [IRecordingManager] through which the UI may update,
+ * delete or replay recordings.
+ */
 class MainScreenViewModel(
     app: Application,
     private val repo: RecordingRepository,

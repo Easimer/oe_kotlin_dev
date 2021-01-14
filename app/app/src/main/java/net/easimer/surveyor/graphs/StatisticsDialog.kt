@@ -14,6 +14,9 @@ import net.easimer.surveyor.databinding.LayoutStatsDialogBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Statistics dialog UI.
+ */
 class StatisticsDialog(
     private val ctx: Context,
     private val model: IStatisticsDialogModel
@@ -45,6 +48,11 @@ class StatisticsDialog(
         return dlg
     }
 
+    /**
+     * Finds a graph widget and wraps it into an [IGraph].
+     * @param id View identifier.
+     * @return The created wrapper
+     */
     private fun View.findGraphAndWrapIt(id: Int): IGraph {
         val view = findViewById<GraphView>(id)
         val fmt = object : DefaultLabelFormatter() {

@@ -17,6 +17,9 @@ import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.disk.entities.Trackpoint
 import java.util.*
 
+/**
+ * The track recorder service that runs in the background.
+ */
 class RecorderService : LifecycleService(), IRecorderService {
     private val TAG = "RecorderService"
     private lateinit var model: RecorderModel
@@ -42,10 +45,12 @@ class RecorderService : LifecycleService(), IRecorderService {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
+        // Check fine location permission
         if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             model.start()
             notification.create()
         } else {
+            // UI should have asked for permission before starting us!
             throw IllegalStateException("WE GOT NO ACCESS_FINE_LOCATION PERMISSION")
         }
 

@@ -15,6 +15,10 @@ import net.easimer.surveyor.data.disk.RecordingRoomRepository
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.data.ui.RecordingRecyclerView
 
+/**
+ * Main activity of the application.
+ * Displays a list of recordings and has a button through which the user can start a new recording.
+ */
 class MainActivity : PermissionCheckedActivity() {
     companion object {
         const val EXTRA_REQUEST = "MainActivity.EXTRA_REQUEST"
@@ -73,6 +77,11 @@ class MainActivity : PermissionCheckedActivity() {
         }
     }
 
+    /**
+     * Handles "extra requests". Called when an intent contains a string with key [EXTRA_REQUEST].
+     * @param request The kind of the request; any of the following:
+     * [REQUEST_STOP_RECORDING].
+     */
     private fun handleExtraRequest(request: String) {
         when(request) {
             REQUEST_STOP_RECORDING -> {

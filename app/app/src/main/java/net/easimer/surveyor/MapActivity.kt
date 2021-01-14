@@ -21,7 +21,17 @@ import net.easimer.surveyor.trackpointsource.IMapTrackpointSource
 import net.easimer.surveyor.trackpointsource.MapTrackpointSourceFactory
 import java.util.*
 
-
+/**
+ * A map activity. This displays a finished or ongoing recording on an interactive map.
+ * If this is an ongoing recording, an additional action button appears which, when clicked on,
+ * makes a new point-of-interest marker.
+ *
+ * Extra parameters:
+ * - [KIND]: what kind of recording are we displaying, [KIND_STATIC] (finished) or [KIND_DYNAMIC]
+ * (ongoing). This is a required parameter.
+ * - [REC_ID]: if this is a finished recording, the ID of that recording. If [KIND] is
+ * [KIND_STATIC], then this is a required parameter.
+ */
 class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
     companion object {
         val KIND = "Kind"
@@ -29,8 +39,6 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         val KIND_DYNAMIC = 1
 
         val REC_ID = "RecordingID"
-
-        private val MAP_STATE = "MAP_STATE"
     }
 
     private enum class Kind {
@@ -110,6 +118,13 @@ class MapActivity : PermissionCheckedActivity(), LocationUpdateObserver {
         mapContainer.addView(mapView)
     }
 
+    /**
+     * Requests permission from the user to write the external storage and then calls one of the
+     * functions supplied in the arguments.
+     *
+     * @param onGranted called when the user has granted the permission to us
+     * @param onDenied called when the user has denied the permission to us
+     */
     private fun checkRwPermissions(onGranted: () -> Unit, onDenied: () -> Unit) {
         val perms = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         requestPermissions(perms) {

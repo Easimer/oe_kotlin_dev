@@ -5,6 +5,9 @@ import net.easimer.surveyor.LocationUpdateObserver
 import net.easimer.surveyor.Recorder
 import java.io.OutputStream
 
+/**
+ * Trackpoint source for ongoing recordings.
+ */
 class LiveMapTrackpointSource(private val ctx: Context) : IMapTrackpointSource {
     override fun start() {
         Recorder.tryStartService(ctx)

@@ -24,6 +24,9 @@ import org.osmdroid.views.overlay.TilesOverlay
 import org.osmdroid.views.overlay.infowindow.InfoWindow
 import java.util.*
 
+/**
+ * The map widget.
+ */
 class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecordingMapView {
     private val TAG = "RecordingView"
     private val mapView = MapView(ctx)
@@ -78,7 +81,7 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         markers.add(marker)
     }
 
-    override fun saveState(p: Parcelable?): BaseSavedState? {
+    private fun saveState(p: Parcelable?): BaseSavedState? {
         mapView.mapCenter?.apply {
             val zoomLevel = mapView.zoomLevelDouble
             return State(p, Pair(latitude, longitude), zoomLevel)
@@ -87,7 +90,7 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         return null
     }
 
-    override fun restoreState(it: BaseSavedState) {
+    private fun restoreState(it: BaseSavedState) {
         if(it is State) {
             val ctl = mapView.controller
             val gp = GeoPoint(it.center.first, it.center.second)
@@ -106,7 +109,7 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         return b
     }
 
-    fun restoreState(key: String, savedInstanceState: Bundle, callSuper: Boolean = false) {
+    private fun restoreState(key: String, savedInstanceState: Bundle, callSuper: Boolean = false) {
         savedInstanceState.getParcelable<State>(key)?.let {
             restoreState(it)
 
@@ -124,7 +127,7 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         }
     }
 
-    override fun restoreState(key: String, savedInstanceState: Bundle) {
+    private fun restoreState(key: String, savedInstanceState: Bundle) {
         restoreState(key, savedInstanceState, false)
     }
 
@@ -137,6 +140,11 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         }
     }
 
+    /**
+     * Little popup window shown when the user taps on a POI marker.
+     * @param mapView The map view
+     * @param title Label of the marker
+     */
     private class MarkerInfoWindow(mapView: MapView, title: String)
         : InfoWindow(R.layout.layout_marker_popup, mapView) {
         init {

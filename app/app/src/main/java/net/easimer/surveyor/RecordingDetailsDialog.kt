@@ -11,6 +11,9 @@ import androidx.fragment.app.DialogFragment
 import net.easimer.surveyor.data.disk.entities.Recording
 import net.easimer.surveyor.databinding.LayoutRecordingDetailsBinding
 
+/**
+ * Dialog where the user can rename, delete or replay a recording.
+ */
 class RecordingDetailsDialog(private val ctx: Context, private val rm: IRecordingManager, private val rec: Recording) : DialogFragment() {
     protected val inflater = LayoutInflater.from(ctx)
     protected val binding = LayoutRecordingDetailsBinding.inflate(inflater)

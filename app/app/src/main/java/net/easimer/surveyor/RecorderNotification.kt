@@ -11,7 +11,16 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 
+/**
+ * A class that manages the UI notification for the service.
+ *
+ * @param ctx The service
+ */
 class RecorderNotification(private val ctx: Service) {
+    /**
+     * Stop intent: this is sent to [MainActivity] when the user presses the stop button on the
+     * notification.
+     */
     private val stopIntent = Intent(ctx, MainActivity::class.java)
         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -44,17 +53,24 @@ class RecorderNotification(private val ctx: Service) {
         }
     }
 
+    /**
+     * Creates and shows the notification.
+     */
     fun create() {
         val builder = notificationBuilderTemplate
         ctx.startForeground(1, builder.build())
     }
 
+    /**
+     * Removes the notification.
+     */
     fun remove() {
         ctx.stopForeground(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun makeNotificationChannel(notifyMan: NotificationManager, chanId: String) {
+        // We need to create a notification channel on newer Android systems.
         val maybeChannel = notifyMan.getNotificationChannel(chanId)
         if(maybeChannel == null) {
             val channel =
