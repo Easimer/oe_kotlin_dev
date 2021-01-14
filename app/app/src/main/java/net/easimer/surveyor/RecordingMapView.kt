@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import net.easimer.surveyor.data.Location
 import org.osmdroid.config.Configuration
@@ -20,6 +21,7 @@ import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.Polyline
 import org.osmdroid.views.overlay.TilesOverlay
+import org.osmdroid.views.overlay.infowindow.InfoWindow
 import java.util.*
 
 class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecordingMapView {
@@ -70,6 +72,7 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         marker.position = GeoPoint(location.latitude, location.longitude)
         val icon = ContextCompat.getDrawable(context, R.drawable.center)
         marker.icon = icon
+        marker.infoWindow = MarkerInfoWindow(mapView, title)
 
         mapView.overlays.add(marker)
         markers.add(marker)
@@ -132,5 +135,16 @@ class RecordingMapView(private val ctx: Context) : LinearLayout(ctx), IRecording
         companion object {
             const val STATE = "RecordingView.STATE"
         }
+    }
+
+    private class MarkerInfoWindow(mapView: MapView, title: String)
+        : InfoWindow(R.layout.layout_marker_popup, mapView) {
+        init {
+            val label = mView.findViewById<TextView>(R.id.marker_info_window_title)
+            label.text = title
+        }
+
+        override fun onOpen(item: Any?) {}
+        override fun onClose() {}
     }
 }
