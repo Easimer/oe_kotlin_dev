@@ -43,8 +43,4 @@ class RecordingDetailsDialog(private val ctx: Context, private val rm: IRecordin
             builder.create()
         } ?: throw IllegalStateException("")
     }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-    }
 }
