@@ -113,7 +113,7 @@ class RecorderModel(
     /**
      * Processes the list of incoming location updates.
      *
-     * @param location List of locations
+     * @param locations List of locations
      */
     private fun processLocations(locations: List<Location>) {
         locations.forEach {

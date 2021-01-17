@@ -7,7 +7,8 @@ import java.io.OutputStream
 /**
  * Takes an [IRecordingGPXAdapter], serializes it to GPX format and writes it to a stream.
  * @param outputStream Stream to write the GPX data to.
- * @param adapter Recording-GPX adapter; see source of [ReplayMapTrackpointSource] for an example
+ * @param adapter Recording-GPX adapter; see source of
+ * [net.easimer.surveyor.trackpointsource.ReplayMapTrackpointSource] for an example
  */
 class GPXExporter(
     private val outputStream: OutputStream,
