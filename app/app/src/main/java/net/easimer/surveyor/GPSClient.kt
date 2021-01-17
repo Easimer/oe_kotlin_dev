@@ -7,7 +7,6 @@ import android.os.HandlerThread
 import android.util.Log
 import com.google.android.gms.location.*
 import java.lang.IllegalStateException
-import java.security.Security
 
 /**
  * An implementation of [IGPSClient] that uses the Google Location Services library.
@@ -17,7 +16,7 @@ class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
     private val TAG = "GPSClient"
     private val gpsThread = HandlerThread("ServiceGPSThread")
     private val gpsThreadHandler : Handler
-    private var callback: ((List<Location>) -> Unit)? = null
+    private var callback: ((List<net.easimer.surveyor.data.Location>) -> Unit)? = null
 
     private val fusedLocationClient: FusedLocationProviderClient
 
@@ -27,7 +26,7 @@ class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(ctx)
     }
 
-    override fun setCallback(callback: (List<Location>) -> Unit) {
+    override fun setCallback(callback: (List<net.easimer.surveyor.data.Location>) -> Unit) {
         this.callback = callback
     }
 
@@ -47,16 +46,16 @@ class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
     override fun onLocationResult(locationResult: LocationResult?) {
         locationResult ?: return
         callback?.let {
-            it(locationResult.locations)
+            it(transform(locationResult.locations))
         }
     }
 
-    override fun getCurrentLocationImmediately(callback: (location: Location) -> Unit) {
+    override fun getCurrentLocationImmediately(callback: (location: net.easimer.surveyor.data.Location) -> Unit) {
         try {
             fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener {
                 it?.let {
                     Log.d(TAG, "getCurrentLocationImmediately: received accurate location")
-                    callback(it)
+                    callback(transform(it))
                 } ?: Log.d(TAG, "getCurrentLocationImmediately: location was null")
             }.addOnFailureListener {
                 Log.d(TAG, "getCurrentLocationImmediately: task failed ex=$it")
@@ -89,5 +88,25 @@ class GPSClient(private val ctx: Context) : IGPSClient, LocationCallback() {
 
     private fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(this)
+    }
+
+    /**
+     * Transforms an Android Location struct to our own Location type.
+     * @param aloc Location
+     * @return Location
+     */
+    private fun transform(aloc: Location): net.easimer.surveyor.data.Location {
+        return net.easimer.surveyor.data.Location(aloc.longitude, aloc.latitude, aloc.altitude, aloc.time)
+    }
+
+    /**
+     * Transforms a list of Android Location structs to our own Location type.
+     * @param locations List of Locations
+     * @return List of transformed locations
+     */
+    private fun transform(locations: List<Location>): List<net.easimer.surveyor.data.Location> {
+        return locations.map {
+            transform(it)
+        }
     }
 }

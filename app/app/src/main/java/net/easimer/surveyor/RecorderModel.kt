@@ -1,13 +1,12 @@
 package net.easimer.surveyor
 
-import android.location.Location
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.PointOfInterest
 import net.easimer.surveyor.data.RecordingRepository
 import net.easimer.surveyor.data.disk.entities.Recording
-import java.time.Instant
 import java.util.*
 import java.util.concurrent.LinkedBlockingQueue
 

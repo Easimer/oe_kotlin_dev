@@ -1,11 +1,11 @@
 package net.easimer.surveyor
 
-import android.location.Location
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import net.easimer.surveyor.data.Location
 import net.easimer.surveyor.data.RecordingRepository
 import org.junit.After
 import org.junit.Before
@@ -52,7 +52,7 @@ class RecorderPOITests {
         mdl.markPointOfInterest(poiTitle)
 
         val date = Date.from(Instant.now())
-        locReqCallback.captured(makeLocation(10.0, 20.0, 30.0, date.time))
+        locReqCallback.captured(Location(10.0, 20.0, 30.0, date.time))
 
         mdl.shutdown()
 
@@ -65,7 +65,7 @@ class RecorderPOITests {
         mdl.markPointOfInterest(poiTitle)
 
         val date = Date.from(Instant.now())
-        locReqCallback.captured(makeLocation(10.0, 20.0, 30.0, date.time))
+        locReqCallback.captured(Location(10.0, 20.0, 30.0, date.time))
 
         mdl.shutdown()
 
@@ -78,22 +78,11 @@ class RecorderPOITests {
         mdl.markPointOfInterest(poiTitle)
 
         val date = Date.from(Instant.now())
-        locReqCallback.captured(makeLocation(10.0, 20.0, 30.0, date.time))
+        locReqCallback.captured(Location(10.0, 20.0, 30.0, date.time))
 
         mdl.shutdown()
 
         verify(exactly = 1) { repo.createRecording(recording = any()) }
         verify(exactly = 1) { repo.addPointOfInterest(recId = 35, title = poiTitle, longitude = 10.0, latitude = 20.0, altitude = 30.0, date = date) }
-    }
-
-    private fun makeLocation(lon: Double, lat: Double, alt: Double, time: Long): Location {
-        var loc = Location("")
-        loc.run {
-            longitude = lon
-            latitude = lat
-            altitude = alt
-            setTime(time)
-        }
-        return loc
     }
 }

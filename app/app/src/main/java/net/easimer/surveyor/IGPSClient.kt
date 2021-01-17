@@ -1,6 +1,6 @@
 package net.easimer.surveyor
 
-import android.location.Location
+import net.easimer.surveyor.data.Location
 
 /**
  * Interface to a location provider.
