@@ -61,14 +61,6 @@ object Recorder {
         return false
     }
 
-    @Synchronized
-    @Deprecated("Use forEachObserver instead")
-    fun pushLocation(location: Location) {
-        observers.forEach {
-            it.onLocationUpdate(location)
-        }
-    }
-
     /**
      * Requests from the service that the full list of trackpoints and POIs be sent to the observer
      * supplied in the arguments.

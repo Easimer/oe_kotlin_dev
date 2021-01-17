@@ -24,7 +24,7 @@ class RecorderModel(
     private val ioThread = HandlerThread("ServiceIOThread")
     private val ioThreadHandler : Handler
 
-    private val track = LinkedList<net.easimer.surveyor.data.Location>()
+    private val track = LinkedList<Location>()
     private val markers = LinkedList<PointOfInterest>()
     private var recId: Long? = null
 
@@ -70,7 +70,7 @@ class RecorderModel(
     }
 
     private fun tryServePOIMarkRequest(it: Location) {
-        val loc = net.easimer.surveyor.data.Location(it.longitude, it.latitude, it.altitude, it.time)
+        val loc = Location(it.longitude, it.latitude, it.altitude, it.time)
         val req = pendingPOIMarkRequests.poll()
         req?.run {
             Log.d(TAG, "serving POI req: $title")
@@ -119,7 +119,7 @@ class RecorderModel(
         locations.forEach {
             Log.d(TAG, "Received location $it")
 
-            val loc = net.easimer.surveyor.data.Location(it.longitude, it.latitude, it.altitude, it.time)
+            val loc = Location(it.longitude, it.latitude, it.altitude, it.time)
             // Add the trackpoint to our local cache.
             track.add(loc)
             // If there is a pending POI mark request then try to serve it
@@ -136,7 +136,9 @@ class RecorderModel(
                 }
 
                 // Notify listeners about new location
-                Recorder.pushLocation(loc)
+                Recorder.forEachObserver { observer ->
+                    observer.onLocationUpdate(loc)
+                }
             }
         }
     }
